@@ -35,9 +35,9 @@ del judge
 
 # display result
 if result['AC']:
-    print "Accept. (%d/%d)" % (result['tpoint_correct'], tpoint_count)
+    print "Accepted. (%d/%d)" % (result['tpoint_correct'], tpoint_count)
 else:
-    print "Not accept. ($d/%d)" % (result['tpoint_correct'], tpoint_count)
+    print "Not accepted. ($d/%d)" % (result['tpoint_correct'], tpoint_count)
 for i in range(0, tpoint_count):
     print "Test point %d: %s" % (i, result['tpoint_status'][i])
     if(result['tpoint_status'][i] == "WA"):

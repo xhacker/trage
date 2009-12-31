@@ -52,7 +52,7 @@ class Judge:
             os.symlink(self.ans_dir + self.tpoint_in[i],\
                 tmp_dir + self.name + ".in")
             subprocess.Popen("cd " + tmp_dir + "; ./" + self.name, shell = True)
-            time.sleep(1) # NOT GOOD!!!
+            time.sleep(0.1) # NOT GOOD!!!
             # IF NO OUTPUT FILE?
             # NEED SMARTER DIFF
             if filecmp.cmp(self.ans_dir + self.tpoint_ans[i],\
