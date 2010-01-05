@@ -1,0 +1,19 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# JudgeShop, CLI version.
+# Recieve argu: pack source, prob_id, source filename
+
+import sys
+
+if len(sys.argv) != 4:
+    print 'Arguments invalid.'
+    sys.exit()
+
+pack_source = sys.argv[1]
+prob_id = sys.argv[2]
+filename = sys.argv[3]
+
+from common import judge
+result = judge(pack_source, prob_id, filename)
+print result

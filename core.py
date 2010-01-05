@@ -1,78 +1,115 @@
-# NDSOJ core judge #
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+# Core judge
+# Request argu: type("system", "user"), prob_id, lang
 
 import os
-import subprocess
 import time
-import filecmp
 import ConfigParser
+import subprocess
 
-core_config = ConfigParser.RawConfigParser()
-core_config.read("core.conf")
-tmp_dir = core_config.get("dir", "tmp_dir")
+def compare_file(file1, file2):
+    # UNFINISHED
+    return False
+
+from common import get_tmp_dir
+tmp_dir = get_tmp_dir()
 
 class Judge:
-    def __init__(self, name, lang, source_dir, ans_dir, tpoint_count,\
-    tpoint_in, tpoint_ans, tpoint_timelmt, tpoint_memolmt):
+    def __init__(self, prob_dir, name, lang):
+        self.prob_dir = prob_dir
         self.name = name
         self.lang = lang
-        self.source_dir = source_dir
-        self.ans_dir = ans_dir
-        self.tpoint_count = tpoint_count
-        self.tpoint_in = tpoint_in
-        self.tpoint_ans = tpoint_ans
-        self.tpoint_timelmt = tpoint_timelmt
-        self.tpoint_memolmt = tpoint_memolmt
+    
+    def load_conf(self):
+        config = ConfigParser.RawConfigParser()
+        try:
+            config.read(self.prob_dir + "problem.conf")
+        except:
+            return {'error': "config"}
+        self.tpoint_count = config.getint("test_point", "test_point_count")
+        self.tpoint_timelmt = []
+        self.tpoint_memolmt = []
+        for i in range(0, self.tpoint_count):
+            self.tpoint_timelmt.append( config.get("test_point", "time_limit_" + str(i)) )
+            self.tpoint_memolmt.append( config.get("test_point", "memo_limit_" + str(i)) )
+        return 0
 
     def compile(self):
         if self.lang == "c":
-            compile_command = 'gcc -o "%s" "%s.%s"' % (tmp_dir + self.name,\
-                self.source_dir + self.name, self.lang) 
+            compile_command = 'gcc -o "%s" "%s"' % (tmp_dir + self.name, tmp_dir + self.name + "." + self.lang) 
         # elif self.lang == "cpp":
         #     compile_command = ''
         # elif self.lang == "pas":
         #     compile_command = ''
         else:
-            # not available now
-            pass
+            # Not available
+            return {'error': "lang"}
         
-        compile_proc = subprocess.Popen(compile_command,\
-            stdout = subprocess.PIPE, shell = True)
-        # time.sleep(2)
+        compile_proc = subprocess.Popen(compile_command, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        return_code = compile_proc.wait()
         compile_err = compile_proc.stdout.read()
-        if len(compile_err) > 0:
-            return compile_err
+        if return_code:
+            return {'error': "compile", 'compile_err': compile_err}
         else:
             return 0
 
-    def judge(self):
-        # now only single file. UNFINISHED!!!
-        result = {'AC': True, 'tpoint_status': [], 'tpoint_ans': [], 'tpoint_out': [], 'tpoint_time': [], 'tpoint_correct': 0, }
+    def execute(self):
+        result = {'error': 0, 'AC': True, 'tpoint_status': [], 'tpoint_ans': [], 'tpoint_out': [],\
+            'tpoint_time': [], 'tpoint_correct': 0, 'tpoint_count': self.tpoint_count}
         for i in range(0, self.tpoint_count):
             self.clean(exe = False)
-            os.symlink(self.ans_dir + self.tpoint_in[i],\
-                tmp_dir + self.name + ".in")
-            subprocess.Popen("cd " + tmp_dir + "; ./" + self.name, shell = True)
-            time.sleep(0.1) # NOT GOOD!!!
-            # IF NO OUTPUT FILE?
-            # NEED SMARTER DIFF
-            if filecmp.cmp(self.ans_dir + self.tpoint_ans[i],\
-            tmp_dir + self.name + ".out"):
-                # right answer
-                result['tpoint_correct'] = result['tpoint_correct'] + 1
-                result['tpoint_status'].append("AC")
-                ans_file = open(self.ans_dir + self.tpoint_ans[i], "r")
+            
+            if os.path.lexists(self.prob_dir + str(i) + ".in") == False:
+                return {'error': 1}
+            try:
+                os.symlink(self.prob_dir + str(i) + ".in", tmp_dir + self.name + ".in")
+            except:
+                return {'error': 1}
+
+            exec_proc = subprocess.Popen("cd " + tmp_dir + "; ./" + self.name, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            # UNFINISHED (time, memory)
+            return_code = exec_proc.wait()
+            
+            if return_code:
+                result['tpoint_status'].append("RTE")
+                result['tpoint_ans'].append(None)
+                result['tpoint_out'].append(None)
+                result['AC'] = False
+                continue
+            
+            try:
+                ans_file = open(self.prob_dir + str(i) + ".ans", "r")
+            except:
+                return {'error': 1}
+            try:
+                out_file = open(tmp_dir + self.name + ".out", "r")
+            except:
+                result['tpoint_status'].append("WA")
                 result['tpoint_ans'].append(ans_file.read())
                 ans_file.close()
-                pass
+                result['tpoint_out'].append("")
+                result['AC'] = False
+                continue
+
+            if compare_file(ans_file, out_file) == False:
+                # Right answer
+                result['tpoint_correct'] = result['tpoint_correct'] + 1
+                result['tpoint_status'].append("AC")
+                result['tpoint_ans'].append(None)
+                result['tpoint_out'].append(None)
             else:
+                print "shit!"
                 result['tpoint_status'].append("WA")
-                ans_file = open(self.ans_dir + self.tpoint_ans[i], "r")
+                ans_file = open(self.prob_dir + str(i) + ".ans", "r")
                 out_file = open(tmp_dir + self.name + ".out", "r")
                 result['tpoint_ans'].append(ans_file.read())
                 result['tpoint_out'].append(out_file.read())
                 ans_file.close()
                 out_file.close()
                 result['AC'] = False
+            
             self.clean(exe = False)
         self.clean()
         return result
