@@ -9,9 +9,19 @@ import time
 import ConfigParser
 import subprocess
 
-def compare_file(file1, file2):
-    # UNFINISHED
-    return False
+def compare_file(filename1, filename2):
+    file1 = open(filename1)
+    file2 = open(filename2)
+    str1 = file1.read()
+    str2 = file2.read()
+    
+    str1 = str1.rstrip("\n")
+    str2 = str2.rstrip("\n")
+    
+    if str1 == str2:
+        # Same file
+        return False
+    return True
 
 from common import get_tmp_dir
 tmp_dir = get_tmp_dir()
@@ -30,10 +40,10 @@ class Judge:
             return {'error': "config"}
         self.tpoint_count = config.getint("test_point", "test_point_count")
         self.tpoint_timelmt = []
-        self.tpoint_memolmt = []
+        self.tpoint_memlmt = []
         for i in range(0, self.tpoint_count):
-            self.tpoint_timelmt.append( config.get("test_point", "time_limit_" + str(i)) )
-            self.tpoint_memolmt.append( config.get("test_point", "memo_limit_" + str(i)) )
+            self.tpoint_timelmt.append( float( config.get("test_point", "time_limit_" + str(i)) ) )
+            self.tpoint_memlmt.append( int( config.get("test_point", "mem_limit_" + str(i)) ) )
         return 0
 
     def compile(self):
@@ -57,14 +67,20 @@ class Judge:
 
     def execute(self):
         result = {'error': 0, 'AC': True, 'tpoint_status': [], 'tpoint_ans': [], 'tpoint_out': [],\
-            'tpoint_time': [], 'tpoint_correct': 0, 'tpoint_count': self.tpoint_count}
+            'tpoint_time': [], 'tpoint_mem': [], 'tpoint_correct': 0, 'tpoint_count': self.tpoint_count, 'tpoint_timelmt': self.tpoint_timelmt, 'tpoint_memlmt': self.tpoint_memlmt}
+        
         for i in range(0, self.tpoint_count):
             self.clean(exe = False)
             
-            if os.path.lexists(self.prob_dir + str(i) + ".in") == False:
+            # Problem file error
+            in_filename = self.prob_dir + str(i) + ".in"
+            ans_filename = self.prob_dir + str(i) + ".ans"
+            out_filename = tmp_dir + self.name + ".out"
+            if os.path.lexists(in_filename) == False\
+                or os.path.lexists(ans_filename) == False:
                 return {'error': 1}
             try:
-                os.symlink(self.prob_dir + str(i) + ".in", tmp_dir + self.name + ".in")
+                os.symlink(in_filename, tmp_dir + self.name + ".in")
             except:
                 return {'error': 1}
 
@@ -72,45 +88,44 @@ class Judge:
             # UNFINISHED (time, memory)
             return_code = exec_proc.wait()
             
+            # Runtime error
             if return_code:
                 result['tpoint_status'].append("RTE")
                 result['tpoint_ans'].append(None)
                 result['tpoint_out'].append(None)
+                result['tpoint_time'].append(None)
+                result['tpoint_mem'].append(None)
                 result['AC'] = False
                 continue
             
-            try:
-                ans_file = open(self.prob_dir + str(i) + ".ans", "r")
-            except:
-                return {'error': 1}
-            try:
-                out_file = open(tmp_dir + self.name + ".out", "r")
-            except:
+            no_output_file = False
+            if not os.path.lexists(out_filename):
+                no_output_file = True
+            if no_output_file or compare_file(ans_filename, out_filename):
                 result['tpoint_status'].append("WA")
+                ans_file = open(ans_filename)
                 result['tpoint_ans'].append(ans_file.read())
                 ans_file.close()
-                result['tpoint_out'].append("")
+                if no_output_file:
+                    result['tpoint_out'].append("")
+                else:
+                    out_file = open(out_filename)
+                    result['tpoint_out'].append(out_file.read())
+                    out_file.close()
                 result['AC'] = False
-                continue
-
-            if compare_file(ans_file, out_file) == False:
+            else:
                 # Right answer
                 result['tpoint_correct'] = result['tpoint_correct'] + 1
                 result['tpoint_status'].append("AC")
                 result['tpoint_ans'].append(None)
                 result['tpoint_out'].append(None)
-            else:
-                print "shit!"
-                result['tpoint_status'].append("WA")
-                ans_file = open(self.prob_dir + str(i) + ".ans", "r")
-                out_file = open(tmp_dir + self.name + ".out", "r")
-                result['tpoint_ans'].append(ans_file.read())
-                result['tpoint_out'].append(out_file.read())
-                ans_file.close()
-                out_file.close()
-                result['AC'] = False
+            
+            # UNFINISHED
+            result['tpoint_time'].append(0.334)
+            result['tpoint_mem'].append(46.42)
             
             self.clean(exe = False)
+        
         self.clean()
         return result
         

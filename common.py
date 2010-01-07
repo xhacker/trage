@@ -79,16 +79,17 @@ def judge(pack_source, prob_id, filename):
         text = text + "Not accepted. (%d/%d)\n" % (result['tpoint_correct'], result['tpoint_count'])
     
     for i in range(0, result['tpoint_count']):
-        text = text + "\n* Test point %d: %s\n" % (i, result['tpoint_status'][i])
+        text = text + "\n* Test point %d: %s" % (i, result['tpoint_status'][i])
+        if(result['tpoint_status'][i] != "RTE"):
+            text = text + " (Time: %.3fs/%.1fs, Mem: %.2fM/%dM)\n"\
+                % (result['tpoint_time'][i], float(result['tpoint_timelmt'][i]), result['tpoint_mem'][i], result['tpoint_memlmt'][i])
+        else:
+            text = text + "\n"
         if result['tpoint_status'][i] == "WA":
             text = text + "Right answer:\n"
             text = text + result['tpoint_ans'][i]
             text = text + "Your answer:\n"
             text = text + result['tpoint_out'][i]
-        elif result['tpoint_status'][i] == "TLE":
-            pass
-        elif result['tpoint_status'][i] == "MLE":
-            pass
     # UNFINISHED!!!
     # Update db
     
