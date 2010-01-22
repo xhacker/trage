@@ -100,24 +100,24 @@ class Judge:
             # UNFINISHED (memory)
             return_code = exec_proc.wait()
             
-            time = float(exec_proc.stdout.readline())
-            result['tpoint_time'].append(time)
-            
-            # TLE
-            if time > self.tpoint_timelmt[i]:
-                result['tpoint_status'].append("TLE")
-                result['tpoint_ans'].append(None)
-                result['tpoint_out'].append(None)
-                result['tpoint_mem'].append(46.42) # UNFINISHED
-                result['AC'] = False
-                continue
-            
             # RTE
             if return_code:
                 result['tpoint_status'].append("RTE")
                 result['tpoint_ans'].append(None)
                 result['tpoint_out'].append(None)
                 result['tpoint_mem'].append(None)
+                result['AC'] = False
+                continue
+                
+            exec_time = float(exec_proc.stdout.readline())
+            result['tpoint_time'].append(exec_time)
+            
+            # TLE
+            if exec_time > self.tpoint_timelmt[i]:
+                result['tpoint_status'].append("TLE")
+                result['tpoint_ans'].append(None)
+                result['tpoint_out'].append(None)
+                result['tpoint_mem'].append(46.42) # UNFINISHED
                 result['AC'] = False
                 continue
             
