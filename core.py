@@ -9,6 +9,9 @@ import time
 import ConfigParser
 import subprocess
 
+from common import get_tmp_dir
+tmp_dir = get_tmp_dir()
+
 def compare_file(filename1, filename2):
     file1 = open(filename1)
     file2 = open(filename2)
@@ -23,9 +26,6 @@ def compare_file(filename1, filename2):
         return False
     return True
 
-from common import get_tmp_dir
-tmp_dir = get_tmp_dir()
-
 class Judge:
     def __init__(self, prob_dir, name, lang):
         self.prob_dir = prob_dir
@@ -35,20 +35,32 @@ class Judge:
     def load_conf(self):
         config = ConfigParser.RawConfigParser()
         try:
-            config.read(self.prob_dir + "problem.conf")
+            config.read( os.path.join(self.prob_dir, "problem.conf") )
         except:
             return {'error': "config"}
         self.tpoint_count = config.getint("test_point", "test_point_count")
         self.tpoint_timelmt = []
         self.tpoint_memlmt = []
+        timelmt_all = None
+        memlmt_all = None
+        if config.has_option("test_point", "time_limit_all"):
+            timelmt_all = float( config.get("test_point", "time_limit_all") )
+        if config.has_option("test_point", "mem_limit_all"):
+            memlmt_all = float( config.get("test_point", "mem_limit_all") )
         for i in range(0, self.tpoint_count):
-            self.tpoint_timelmt.append( float( config.get("test_point", "time_limit_" + str(i)) ) )
-            self.tpoint_memlmt.append( int( config.get("test_point", "mem_limit_" + str(i)) ) )
+            if timelmt_all:
+                self.tpoint_timelmt.append(timelmt_all)
+            else:
+                self.tpoint_timelmt.append( float( config.get("test_point", "time_limit_" + str(i)) ) )
+            if memlmt_all:
+                self.tpoint_memlmt.append(memlmt_all)
+            else:
+                self.tpoint_memlmt.append( int( config.get("test_point", "mem_limit_" + str(i)) ) )
         return 0
 
     def compile(self):
         if self.lang == "c":
-            compile_command = 'gcc -o "%s" "%s"' % (tmp_dir + self.name, tmp_dir + self.name + "." + self.lang) 
+            compile_command = 'gcc -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang)) 
         # elif self.lang == "cpp":
         #     compile_command = ''
         # elif self.lang == "pas":
@@ -73,27 +85,38 @@ class Judge:
             self.clean(exe = False)
             
             # Problem file error
-            in_filename = self.prob_dir + str(i) + ".in"
-            ans_filename = self.prob_dir + str(i) + ".ans"
-            out_filename = tmp_dir + self.name + ".out"
+            in_filename = os.path.join(self.prob_dir, str(i) + ".in")
+            ans_filename = os.path.join(self.prob_dir, str(i) + ".ans")
+            out_filename = os.path.join(tmp_dir, self.name + ".out")
             if os.path.lexists(in_filename) == False\
                 or os.path.lexists(ans_filename) == False:
                 return {'error': 1}
             try:
-                os.symlink(in_filename, tmp_dir + self.name + ".in")
+                os.symlink(in_filename, os.path.join(tmp_dir, self.name + ".in"))
             except:
                 return {'error': 1}
 
-            exec_proc = subprocess.Popen("cd " + tmp_dir + "; ./" + self.name, stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
-            # UNFINISHED (time, memory)
+            exec_proc = subprocess.Popen("cd " + tmp_dir + "; /usr/bin/time -f \"%e\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            # UNFINISHED (memory)
             return_code = exec_proc.wait()
             
-            # Runtime error
+            time = float(exec_proc.stdout.readline())
+            result['tpoint_time'].append(time)
+            
+            # TLE
+            if time > self.tpoint_timelmt[i]:
+                result['tpoint_status'].append("TLE")
+                result['tpoint_ans'].append(None)
+                result['tpoint_out'].append(None)
+                result['tpoint_mem'].append(46.42) # UNFINISHED
+                result['AC'] = False
+                continue
+            
+            # RTE
             if return_code:
                 result['tpoint_status'].append("RTE")
                 result['tpoint_ans'].append(None)
                 result['tpoint_out'].append(None)
-                result['tpoint_time'].append(None)
                 result['tpoint_mem'].append(None)
                 result['AC'] = False
                 continue
@@ -115,13 +138,12 @@ class Judge:
                 result['AC'] = False
             else:
                 # Right answer
-                result['tpoint_correct'] = result['tpoint_correct'] + 1
+                result['tpoint_correct'] += 1
                 result['tpoint_status'].append("AC")
                 result['tpoint_ans'].append(None)
                 result['tpoint_out'].append(None)
             
-            # UNFINISHED
-            result['tpoint_time'].append(0.334)
+            # Memory UNFINISHED
             result['tpoint_mem'].append(46.42)
             
             self.clean(exe = False)
@@ -131,13 +153,13 @@ class Judge:
         
     def clean(self, io = True, exe = True):
         if io:
-            if os.path.lexists(tmp_dir + self.name + ".in"):
-                os.remove(tmp_dir + self.name + ".in")
-            if os.path.lexists(tmp_dir + self.name + ".out"):
-                os.remove(tmp_dir + self.name + ".out")
+            if os.path.lexists(os.path.join(tmp_dir, self.name + ".in")):
+                os.remove(os.path.join(tmp_dir, self.name + ".in"))
+            if os.path.lexists(os.path.join(tmp_dir, self.name + ".out")):
+                os.remove(os.path.join(tmp_dir, self.name + ".out"))
         if exe:
-            if os.path.lexists(tmp_dir + self.name):
-                os.remove(tmp_dir + self.name)
+            if os.path.lexists(os.path.join(tmp_dir, self.name)):
+                os.remove(os.path.join(tmp_dir, self.name))
 
     def __del__(self):
         self.clean()

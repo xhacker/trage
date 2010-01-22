@@ -4,15 +4,16 @@
 # JudgeShop, functions.
 
 def get_tmp_dir():
-    import ConfigParser
-    config = ConfigParser.RawConfigParser()
-    try:
-        config.read("config.conf")
-    except:
-        tmp_dir = "/tmp/"
-    else:
-        tmp_dir = config.get("dir", "tmp_dir")
+    # UNFINISHED
+    tmp_dir = "/tmp/"
     return tmp_dir
+    
+    #~ if not defined(tmp_dir):
+        #~ import os
+        #~ tmp_dir = os.tempnam(None, "Judge")
+        #~ create_dir(tmp_dir)
+    #~ 
+    #~ return tmp_dir
 
 def judge(pack_source, prob_id, filename):
     
@@ -21,26 +22,25 @@ def judge(pack_source, prob_id, filename):
     
     # Get directory path
     tmp_dir = get_tmp_dir()
-    # UNFINISHED!!!
-    prob_dir = "/home/xhacker/.judgeshop/problem/" + pack_source + "/" + prob_id + "/"
+    import os
+    prob_dir = os.path.join(os.getenv("HOME"), ".judgeshop/problem", pack_source, prob_id)
 
     # Read problem config file
     import ConfigParser
     config = ConfigParser.RawConfigParser()
     try:
-        config.read(prob_dir + "problem.conf")
+        config.read(os.path.join(prob_dir, "problem.conf"))
         name = config.get("main", "name")
     except:
         return "Problem file error, please report the bug to developers."
 
     # Make a link for the source file
-    import os
     if os.path.lexists(filename) == False:
         return "Source file not exist."
-    if os.path.lexists(tmp_dir + name + "." + lang):
-        os.remove(tmp_dir + name + "." + lang)
+    if os.path.lexists( os.path.join(tmp_dir, name + "." + lang) ):
+        os.remove( os.path.join(tmp_dir, name + "." + lang) )
     try:
-        os.symlink(filename, tmp_dir + name + "." + lang)
+        os.symlink(filename, os.path.join(tmp_dir, name + "." + lang))
     except:
         return "An error occured, please report the bug to developers."
 
@@ -81,7 +81,7 @@ def judge(pack_source, prob_id, filename):
     for i in range(0, result['tpoint_count']):
         text = text + "\n* Test point %d: %s" % (i, result['tpoint_status'][i])
         if(result['tpoint_status'][i] != "RTE"):
-            text = text + " (Time: %.3fs/%.1fs, Mem: %.2fM/%dM)\n"\
+            text = text + " (Time: %.2fs/%.1fs, Mem: %.2fM/%dM)\n"\
                 % (result['tpoint_time'][i], float(result['tpoint_timelmt'][i]), result['tpoint_mem'][i], result['tpoint_memlmt'][i])
         else:
             text = text + "\n"
