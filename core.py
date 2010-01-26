@@ -96,8 +96,23 @@ class Judge:
             except:
                 return {'error': 1}
 
-            exec_proc = subprocess.Popen("cd " + tmp_dir + "; /usr/bin/time -f \"%e\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
-            # UNFINISHED (memory)
+            exec_proc = subprocess.Popen("cd " + tmp_dir + "; /usr/bin/time -f \"%e\\n%M\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+            # TOO UGLY!!!
+            TLE_flag = False
+            # waitpid, wait4 ?
+            #~ for j in range(0, 10000):
+                #~ if j > self.tpoint_timelmt[i] * 2 * 10:
+                    #~ try:
+                        #~ exec_proc.kill()
+                    #~ except:
+                        #~ pass
+                    #~ return_code = 0
+                    #~ TLE_flag = True
+                    #~ break
+                #~ time.sleep(0.1)
+                #~ if exec_proc.poll() == 0:
+                    #~ return_code = exec_proc.returncode()
+                    #~ break
             return_code = exec_proc.wait()
             
             # RTE
@@ -111,13 +126,16 @@ class Judge:
                 
             exec_time = float(exec_proc.stdout.readline())
             result['tpoint_time'].append(exec_time)
+            exec_mem = float(exec_proc.stdout.readline()) / 4 / 1000
+            result['tpoint_mem'].append(exec_mem)
             
             # TLE
-            if exec_time > self.tpoint_timelmt[i]:
+            if TLE_flag:
+                result['tpoint_time'][i] = -1
+            if TLE_flag or exec_time > self.tpoint_timelmt[i]:
                 result['tpoint_status'].append("TLE")
                 result['tpoint_ans'].append(None)
                 result['tpoint_out'].append(None)
-                result['tpoint_mem'].append(46.42) # UNFINISHED
                 result['AC'] = False
                 continue
             
@@ -142,10 +160,7 @@ class Judge:
                 result['tpoint_status'].append("AC")
                 result['tpoint_ans'].append(None)
                 result['tpoint_out'].append(None)
-            
-            # Memory UNFINISHED
-            result['tpoint_mem'].append(46.42)
-            
+                        
             self.clean(exe = False)
         
         self.clean()
