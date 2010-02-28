@@ -118,6 +118,7 @@ class Judge:
             # RTE
             if return_code:
                 result['tpoint_status'].append("RTE")
+                result['tpoint_time'].append(None)
                 result['tpoint_ans'].append(None)
                 result['tpoint_out'].append(None)
                 result['tpoint_mem'].append(None)
