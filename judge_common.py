@@ -10,10 +10,12 @@ class Judge:
         self.id          = id
         self.source_file = source_file
         self.lang        = os.path.splitext(source_file)[1].lstrip('.').lower()
+        self.prob_dir    = os.path.join(os.getenv("HOME"), ".trage/problem", self.source, self.id)
 
+        
     def load(self):
         '''读取题目配置文件'''
-        config_file = os.path.join(os.getenv('HOME'), '.trage/problem', self.source, self.id, 'problem.conf')
+        config_file = os.path.join(self.prob_dir, 'problem.conf')
         
         import ConfigParser
         config    = ConfigParser.RawConfigParser()
@@ -42,7 +44,8 @@ class Judge:
                 self.tpoint_memlmt.append(memlmt_all)
             else:
                 self.tpoint_memlmt.append( int( config.get("test_point", "mem_limit_" + str(i)) ) )
-       
+
+                
     def compile(self):
         '''编译'''
         # Make a link for the source file
@@ -77,23 +80,93 @@ class Judge:
         else:
             return None
 
+        
     def judge(self):
         '''评测一个测试点'''
-        # TODO
         if self.tpoint_current >= self.tpoint_count:
+            self.clean()
             return None
 
-        status = 'TLE'
-        ans    = None
-        out    = None
-        time   = 0.23
-        mem    = 4.04
-        result = {'tpoint': self.tpoint_current + 1, 'status': status, 'ans': ans, 'out': out, 'time': time, 'mem': mem, \
-                      'timelmt': self.tpoint_timelmt[self.tpoint_current],\
-                      'memlmt': self.tpoint_memlmt[self.tpoint_current] }
+        tpoint = self.tpoint_current
         self.tpoint_current += 1
-        return result
+        self.clean(exe = False)
+        
+        in_file  = os.path.join(self.prob_dir, str(tpoint) + ".in")
+        out_file = os.path.join(tmp_dir, self.name + ".out")
+        ans_file = os.path.join(self.prob_dir, str(tpoint) + ".ans")
+
+        if os.path.lexists(in_file) == False \
+                or os.path.lexists(ans_file) == False:
+            return {'error': 1}
+        try:
+            os.symlink(in_file, os.path.join(tmp_dir, self.name + ".in"))
+        except:
+            return {'error': 1}
+
+        import subprocess
+        os.chdir(tmp_dir)
+        exec_proc = subprocess.Popen("/usr/bin/time -f \"%e\\n%M\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        #exec_proc = subprocess.Popen("cd " + tmp_dir + "; /usr/bin/time -f \"%e\\n%M\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        # TOO UGLY!!!
+        # waitpid, wait4 ?
+        # for j in range(0, 10000):
+        # if j > self.tpoint_timelmt[i] * 2 * 10:
+        # try:
+        # exec_proc.kill()
+        # except:
+        # pass
+        # return_code = 0
+        # TLE_flag = True
+        # break
+        # time.sleep(0.1)
+        # if exec_proc.poll() == 0:
+        # return_code = exec_proc.returncode()
+        # break
+        return_code = exec_proc.wait()
+
+        result = {'error': 0, 'tpoint': tpoint + 1,       \
+                  'timelmt': self.tpoint_timelmt[tpoint], \
+                  'memlmt': self.tpoint_memlmt[tpoint] }
+        
+
+        # RTE
+        if return_code:
+            result['status'] = 'RTE'
+            return result
+                
+        exec_time      = float(exec_proc.stdout.readline())
+        result['time'] = exec_time
+        exec_mem       = float(exec_proc.stdout.readline()) / 4 / 1000
+        result['mem']  = exec_mem
             
+        # TLE
+        if exec_time > self.tpoint_timelmt[tpoint]:
+            result['status'] = 'TLE'
+            return result
+
+        import diff
+        no_out_file = False
+        if not os.path.lexists(out_file):
+            no_out_file = True
+        if no_out_file or diff_file(ans_file, out_file):
+            result['status'] = 'WA'
+            ans_f = open(ans_file)
+            result['ans'] = ans_f.read()
+            ans_f.close()
+            if no_out_file:
+                result['out'] = 'No output file. Please check your program.'
+            else:
+                out_f = open(out_file)
+                result['out'] = out_f.read()
+                out_f.close()
+        else:
+            # Right answer
+            self.tpoint_correct += 1
+            result['status'] = 'AC'
+        
+        return result
+
+    
     def getResult(self):
         if self.tpoint_correct == self.tpoint_count:
             AC = True
@@ -102,3 +175,18 @@ class Judge:
         return { 'tpoint_count': self.tpoint_count,
                  'tpoint_correct': self.tpoint_correct,
                  'AC': AC }
+
+    
+    def clean(self, io = True, exe = True):
+        if io:
+            if os.path.lexists(os.path.join(tmp_dir, self.name + ".in")):
+                os.remove(os.path.join(tmp_dir, self.name + ".in"))
+            if os.path.lexists(os.path.join(tmp_dir, self.name + ".out")):
+                os.remove(os.path.join(tmp_dir, self.name + ".out"))
+        if exe:
+            if os.path.lexists(os.path.join(tmp_dir, self.name)):
+                os.remove(os.path.join(tmp_dir, self.name))
+
+                
+    def __del__(self):
+        self.clean()

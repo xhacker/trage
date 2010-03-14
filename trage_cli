@@ -3,8 +3,8 @@
 
 import sys
 
-print 'Welcome to Trage CLI version!'
-print 'Command line: trage_cli problem_source problem_id source_file\n'
+print 'Trage | Version Dawn 1 | CLI'
+print 'Usage: trage_cli problem_source problem_id source_file\n'
 
 if len(sys.argv) != 4:
     print 'Error: Arguments invalid.'
@@ -18,6 +18,7 @@ from judge_common import Judge
 
 judge = Judge(prob_source, prob_id, source_file)
 
+print '====================================================== Load Problem ============'
 if judge.load():
     print 'Problem config file error, please report the bug to developers.'
     sys.exit()
@@ -27,29 +28,38 @@ prob = Problem(prob_source, prob_id)
 if prob.load():
     print 'Problem config file error, please report the bug to developers.'
     sys.exit()
-print 'Problem: %s (Problem source: "%s", id: %s)\n' % (prob.getName(), prob_source, prob_id)
+print 'Problem: %s (Problem source: "%s", id: %s)' % (prob.getName(), prob_source, prob_id)
 
+
+print '=========================================================== Compile ============'
 print 'Compiling...'
 compile_err = judge.compile()
 if compile_err:
     print 'Compile failed. Error:'
     print compile_err
     sys.exit()
-print 'Done.\n'
+print 'Done.'
 
-print 'Running...\n'
+
+print '============================================================= Judge ============'
 while True:
     tpoint_result = judge.judge()
+
     if tpoint_result == None:
         break
-    str = '* Test point %d: %s' % (tpoint_result['tpoint'], tpoint_result['status'])
+
+    if tpoint_result['error']:
+        print 'Problem data file error.'
+        sys.exit()
+    
+    str = '[ Test %2d ] [ %s ]' % (tpoint_result['tpoint'], tpoint_result['status'])
     if tpoint_result['status'] in ['AC', 'WA']:
-        str += ' (Time: %2fs/%1fs, Mem: %2fM/%dM)' % (tpoint_result['time'], tpoint_result['timelmt'],\
-                                                      tpoint_result['mem'],  tpoint_result['memlmt'])
+        str += ' [ Time: %.2fs/%.1fs ] [Mem: %.2fM/%dM ]' % (tpoint_result['time'], tpoint_result['timelmt'],\
+                                                              tpoint_result['mem'],  tpoint_result['memlmt'])
     print str
     
 result = judge.getResult()
 if result['AC'] == True:
-    print 'Accepted, congratulations! (%d/%d)' % (result['tpoint_currect'], result['tpoint_count'])
+    print '[ Result: %2d/%2d ] Accepted.' % (result['tpoint_correct'], result['tpoint_count'])
 else:
-    print 'Sorry, not accepted. (%d/%d)' % (result['tpoint_correct'], result['tpoint_count'])
+    print '[ Result: %2d/%2d ] Not accepted.' % (result['tpoint_correct'], result['tpoint_count'])
