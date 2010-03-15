@@ -3,7 +3,7 @@
 
 import sys
 
-print 'Trage | Version Dawn 1 | CLI'
+print 'Trage | Version: Dawn 1 | CLI'
 print 'Usage: trage_cli problem_source problem_id source_file\n'
 
 if len(sys.argv) != 4:
@@ -54,7 +54,7 @@ while True:
     
     str = '[ Test %2d ] [ %s ]' % (tpoint_result['tpoint'], tpoint_result['status'])
     if tpoint_result['status'] in ['AC', 'WA']:
-        str += ' [ Time: %.2fs/%.1fs ] [Mem: %.2fM/%dM ]' % (tpoint_result['time'], tpoint_result['timelmt'],\
+        str += ' [ Time: %.2fs/%.1fs ] [ Mem: %.2fM/%dM ]' % (tpoint_result['time'], tpoint_result['timelmt'],\
                                                               tpoint_result['mem'],  tpoint_result['memlmt'])
     print str
     

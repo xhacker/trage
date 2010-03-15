@@ -63,7 +63,8 @@ class Judge:
         if self.lang == "c":
             compile_command = 'gcc -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
         # elif self.lang == "cpp":
-        #     compile_command = ''
+            # 实验性支持 C++
+            # compile_command = 'g++ -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
         # elif self.lang == "pas":
         #     compile_command = ''
         else:
@@ -144,7 +145,7 @@ class Judge:
             result['status'] = 'TLE'
             return result
 
-        import diff
+        from diff import diff_file
         no_out_file = False
         if not os.path.lexists(out_file):
             no_out_file = True
