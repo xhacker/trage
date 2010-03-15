@@ -51,13 +51,13 @@ class Judge:
         # Make a link for the source file
         abs_source_file = os.path.abspath(self.source_file)
         if os.path.lexists(self.source_file) == False:
-            return "Source file not exist." #TODO Source file does not exist.
+            return "Source file does not exist."
         if os.path.lexists( os.path.join(tmp_dir, self.name + "." + self.lang) ):
             os.remove( os.path.join(tmp_dir, self.name + "." + self.lang) )
         try:
             os.symlink(abs_source_file, os.path.join(tmp_dir, self.name + "." + self.lang))
         except:
-            return "An error occured, please report the bug to developers."
+            return "An error has occured, please report the bug to the developers."
 
         # Compile command
         if self.lang == "c":
@@ -67,7 +67,7 @@ class Judge:
         # elif self.lang == "pas":
         #     compile_command = ''
         else:
-            return 'Sorry, your programming language currently not supported.' #TODO your programming language is not supported currently
+            return "Sorry, we don\'t support your programming language currently."
 
         # Compile
         import subprocess

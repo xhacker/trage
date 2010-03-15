@@ -20,13 +20,13 @@ judge = Judge(prob_source, prob_id, source_file)
 
 print '====================================================== Load Problem ============'
 if judge.load():
-    print 'Problem config file error, please report the bug to developers.'
+    print 'Problem config file error, please report the bug to the developers.'
     sys.exit()
 
 from prob_common import Problem
 prob = Problem(prob_source, prob_id)
 if prob.load():
-    print 'Problem config file error, please report the bug to developers.'
+    print 'Problem config file error, please report the bug to the developers.'
     sys.exit()
 print 'Problem: %s (Problem source: "%s", id: %s)' % (prob.getName(), prob_source, prob_id)
 
