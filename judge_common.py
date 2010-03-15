@@ -67,7 +67,7 @@ class Judge:
         # elif self.lang == "pas":
         #     compile_command = ''
         else:
-            return "Sorry, we don\'t support your programming language currently."
+            return "Sorry, we don't support your programming language currently."
 
         # Compile
         import subprocess
