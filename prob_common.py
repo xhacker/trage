@@ -25,13 +25,13 @@ class Problem:
         # TODO
         self.info = None
     
-    def getName(self):
+    def get_name(self):
         return self.name
     
-    def getInfo(self):
+    def get_info(self):
         return self.info
         pass
 
-    def getProbList(self):
+    def get_problist(self):
         # TODO
         pass

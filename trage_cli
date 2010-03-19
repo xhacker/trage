@@ -28,7 +28,7 @@ prob = Problem(prob_source, prob_id)
 if prob.load():
     print 'Problem config file error, please report the bug to the developers.'
     sys.exit()
-print 'Problem: %s (Problem source: "%s", id: %s)' % (prob.getName(), prob_source, prob_id)
+print 'Problem: %s (Problem source: "%s", id: %s)' % (prob.get_name(), prob_source, prob_id)
 
 
 print '=========================================================== Compile ============'
@@ -52,13 +52,13 @@ while True:
         print 'Problem data file error.'
         sys.exit()
     
-    str = '[ Test %2d ] [ %s ]' % (tpoint_result['tpoint'], tpoint_result['status'])
+    str = '[ Test %2d ] [ %3s ]' % (tpoint_result['tpoint'], tpoint_result['status'])
     if tpoint_result['status'] in ['AC', 'WA']:
         str += ' [ Time: %.2fs/%.1fs ] [ Mem: %.2fM/%dM ]' % (tpoint_result['time'], tpoint_result['timelmt'],\
                                                               tpoint_result['mem'],  tpoint_result['memlmt'])
     print str
     
-result = judge.getResult()
+result = judge.get_result()
 if result['AC'] == True:
     print '[ Result: %2d/%2d ] Accepted.' % (result['tpoint_correct'], result['tpoint_count'])
 else:

@@ -62,11 +62,12 @@ class Judge:
         # Compile command
         if self.lang == "c":
             compile_command = 'gcc -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
-        # elif self.lang == "cpp":
+        elif self.lang == "cpp":
             # 实验性支持 C++
-            # compile_command = 'g++ -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
-        # elif self.lang == "pas":
-        #     compile_command = ''
+            compile_command = 'g++ -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
+        elif self.lang == "pas":
+            # 实验性支持 Pascal
+            compile_command = 'fpc -o"%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
         else:
             return "Sorry, we don't support your programming language currently."
 
@@ -168,7 +169,7 @@ class Judge:
         return result
 
     
-    def getResult(self):
+    def get_result(self):
         if self.tpoint_correct == self.tpoint_count:
             AC = True
         else:
