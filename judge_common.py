@@ -19,32 +19,33 @@ class Judge:
         
         import ConfigParser
         config    = ConfigParser.RawConfigParser()
+        if os.path.lexists(config_file) == False:
+            return 1 # Wrong problem id
         try:
-            config.read( os.path.join(config_file) )
+            config.read(config_file)
+            self.name           = config.get("main", "name")
+            self.tpoint_count   = config.getint("test_point", "test_point_count")
+            self.tpoint_timelmt = []
+            self.tpoint_memlmt  = []
+            self.tpoint_correct = 0
+            self.tpoint_current = 0
+            timelmt_all         = None
+            memlmt_all          = None
+            if config.has_option("test_point", "time_limit_all"):
+                timelmt_all     = float( config.get("test_point", "time_limit_all") )
+            if config.has_option("test_point", "mem_limit_all"):
+                memlmt_all      = float( config.get("test_point", "mem_limit_all") )
+            for i in range(0, self.tpoint_count):
+                if timelmt_all:
+                    self.tpoint_timelmt.append(timelmt_all)
+                else:
+                    self.tpoint_timelmt.append( float( config.get("test_point", "time_limit_" + str(i)) ) )
+                if memlmt_all:
+                    self.tpoint_memlmt.append(memlmt_all)
+                else:
+                    self.tpoint_memlmt.append( int( config.get("test_point", "mem_limit_" + str(i)) ) )
         except:
-            return 1 # Error
-        self.name           = config.get("main", "name")
-        self.tpoint_count   = config.getint("test_point", "test_point_count")
-        self.tpoint_timelmt = []
-        self.tpoint_memlmt  = []
-        self.tpoint_correct = 0
-        self.tpoint_current = 0
-        timelmt_all         = None
-        memlmt_all          = None
-        if config.has_option("test_point", "time_limit_all"):
-            timelmt_all     = float( config.get("test_point", "time_limit_all") )
-        if config.has_option("test_point", "mem_limit_all"):
-            memlmt_all      = float( config.get("test_point", "mem_limit_all") )
-        for i in range(0, self.tpoint_count):
-            if timelmt_all:
-                self.tpoint_timelmt.append(timelmt_all)
-            else:
-                self.tpoint_timelmt.append( float( config.get("test_point", "time_limit_" + str(i)) ) )
-            if memlmt_all:
-                self.tpoint_memlmt.append(memlmt_all)
-            else:
-                self.tpoint_memlmt.append( int( config.get("test_point", "mem_limit_" + str(i)) ) )
-
+            return 2 # Error
                 
     def compile(self):
         '''编译'''
