@@ -1,0 +1,187 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import gtk
+import pango
+import gobject
+import threading
+
+print 'Welcome to Trage!'
+
+gobject.threads_init()
+
+import about
+
+class TrageWindow(gtk.Window):
+    __gtype_name__ = "TrageWindow"
+
+
+    def __init__(self):
+        pass
+
+
+    def finish_init(self, builder):
+        self.builder = builder
+        self.builder.connect_signals(self)
+
+        #uncomment the following code to read in preferences at start up
+        #dlg = PreferencesFooDialog.NewPreferencesFooDialog()
+        #self.preferences = dlg.get_preferences()
+
+        #code for other initialization actions should be added here
+
+
+    def judge(self, widget):
+        t = JudgeThread(self.builder)
+        t.start()
+    
+
+    def help(self, widget):
+        """help - display the help box for Trage"""
+        #about = AboutFooDialog.NewAboutFooDialog()
+        #response = about.run()
+        #about.destroy()
+        pass
+
+
+    def about(self, widget, data=None):
+        """about - display the about box for Trage"""
+        about_dialog = about.new_about()
+        response = about_dialog.run()
+        about_dialog.destroy()
+
+
+    def preference(self, widget, data=None):
+        """preference - display the preference window for Trage"""
+        #prefs = PreferencesFooDialog.NewPreferencesFooDialog()
+        #response = prefs.run()
+        #if response == gtk.RESPONSE_OK:
+            #make any updates based on changed preferences here
+            #pass
+        #prefs.destroy()
+        pass
+
+
+    def quit(self, widget, data=None):
+        """quit - signal handler for closing the TrageWindow"""
+        self.destroy()
+
+
+    def on_destroy(self, widget, data=None):
+        """on_destroy - called when the TrageWindow is close"""
+        #clean up code for saving application state should be added here
+
+        gtk.main_quit()
+
+class JudgeThread(threading.Thread):
+    def __init__(self, builder):
+        super(JudgeThread, self).__init__()
+        self.builder = builder
+        self.result_view = self.builder.get_object('result_view')
+        self.result_view.modify_font( pango.FontDescription('Monospace') )
+        #self.judge()
+
+
+    def printv(self, str):
+        """printv - print to the result view"""
+        self.result_buf.insert(self.result_buf.get_end_iter(), str)
+        self.result_view.set_buffer(self.result_buf)
+        mark = self.result_buf.get_insert()
+        self.result_view.scroll_mark_onscreen(mark)
+        return False
+
+
+    def clearv(self):
+        """clearv - clear the result view"""
+        self.result_buf = gtk.TextBuffer(None)
+        self.result_view.set_buffer(self.result_buf)
+
+
+    # Judge
+    def run(self):
+        """judge - judge current problem"""
+
+        entry_probid = self.builder.get_object('entry_probid')
+        if entry_probid.get_text().isdigit() == False:
+            self.clearv()
+            self.printv('Problem number should be a number.\n')
+            return
+        prob_id = entry_probid.get_text()
+        filechooser_source = self.builder.get_object('filechooser_source')
+        source_file = filechooser_source.get_filename()
+        if source_file == None:
+            self.clearv()
+            self.printv('Please choose a source file.\n')
+            return
+
+        # everything seems ok.
+        self.clearv()
+
+        from judge_common import Judge
+        prob_source = 'user'
+        judge = Judge(prob_source, prob_id, source_file)
+
+        self.printv('== Load Problem ============\n')
+        load_err = judge.load()
+        if load_err == 1:
+            self.printv('Wrong problem id.\n')
+            return
+        if load_err == 2:
+            self.printv('Problem config file error, please report the bug to the developers.\n')
+            return
+
+        from prob_common import Problem
+        prob = Problem(prob_source, prob_id)
+        if prob.load():
+            self.printv('Problem config file error, please report the bug to the developers.')
+            return
+        self.printv('Problem: %s (Problem source: "%s", id: %s)\n' % (prob.get_name(), prob_source, prob_id))
+
+        self.printv('== Compile ============\n')
+        self.printv('Compiling...\n')
+        compile_err = judge.compile()
+        if compile_err:
+            self.printv('Compile failed. Error:\n')
+            self.printv(compile_err)
+            return
+        self.printv('Done.\n')
+
+        self.printv('== Judge ============\n')
+        while True:
+            tpoint_result = judge.judge()
+
+            if tpoint_result == None:
+                break
+
+            if tpoint_result['error']:
+                self.printv('Problem data file error.\n')
+                return
+
+            str = '[ Test %2d ] [ %3s ]' % (tpoint_result['tpoint'], tpoint_result['status'])
+            if tpoint_result['status'] in ['AC', 'WA']:
+                str += ' [ Time: %.2fs/%.1fs ] [ Mem: %.2fM/%dM ]' % (tpoint_result['time'], tpoint_result['timelmt'],\
+                                                                      tpoint_result['mem'],  tpoint_result['memlmt'])
+            gobject.idle_add(self.printv, str + '\n')
+            time.sleep(0.1)
+
+        result = judge.get_result()
+        if result['AC'] == True:
+            self.printv('[ Result: %2d/%2d ] Accepted.\n' % (result['tpoint_correct'], result['tpoint_count']))
+        else:
+            self.printv('[ Result: %2d/%2d ] Not accepted.\n' % (result['tpoint_correct'], result['tpoint_count']))
+
+
+def new_window():
+    ui_filename = 'ui/trage_window.glade'
+    builder = gtk.Builder()
+    builder.add_from_file(ui_filename)
+    window = builder.get_object('trage_window')
+    window.finish_init(builder)
+    return window
+
+
+if __name__ == "__main__":
+    window = new_window()
+    window.show()
+    gtk.main()
+

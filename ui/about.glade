@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<interface>
+  <requires lib="gtk+" version="2.16"/>
+  <!-- interface-requires about_trage_dialog 1.0 -->
+  <!-- interface-naming-policy project-wide -->
+  <object class="AboutTrageDialog" id="about_trage_dialog">
+    <property name="border_width">5</property>
+    <property name="icon">icon.png</property>
+    <property name="type_hint">normal</property>
+    <property name="program_name">Trage</property>
+    <property name="version">Dawn 0</property>
+    <property name="copyright" translatable="yes">GPLv3</property>
+    <property name="comments" translatable="yes">&#x4E00;&#x4E2A;&#x5F00;&#x6E90;&#x7684;&#x8BC4;&#x6D4B;&#x8F6F;&#x4EF6;&#x3002;</property>
+    <property name="website">http://www.shiyihcc.com/trage</property>
+    <property name="website_label" translatable="yes">Trage &#x7F51;&#x7AD9;</property>
+    <property name="authors">Xhacker Liu &lt;liu.dongyuan@gmail.com&gt;</property>
+    <property name="documenters"></property>
+    <property name="artists"></property>
+    <property name="logo">logo.png</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox1">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child>
+          <placeholder/>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area1">
+            <property name="visible">True</property>
+            <property name="layout_style">end</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>
