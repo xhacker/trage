@@ -2,7 +2,7 @@
                depends="gtk+" version="1.0">
   <glade-widget-classes>
     <glade-widget-class title="About Trage Dialog" name="AboutTrageDialog" 
-                        generic-name="AboutFooDialog" parent="GtkAboutDialog"
+                        generic-name="AboutTrageDialog" parent="GtkAboutDialog"
                         icon-name="widget-gtk-about-dialog"/>
   </glade-widget-classes>
 

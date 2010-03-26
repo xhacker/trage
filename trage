@@ -11,6 +11,7 @@ print 'Welcome to Trage!'
 gobject.threads_init()
 
 import about
+import add
 
 class TrageWindow(gtk.Window):
     __gtype_name__ = "TrageWindow"
@@ -39,7 +40,14 @@ class TrageWindow(gtk.Window):
         menuitem_judge.set_sensitive(False)
         t = JudgeThread(self.builder)
         t.start()
-    
+
+
+    def add(self, widget, data=None):
+        """add - display the add box for Trage"""
+        add_dialog = add.new_add()
+        add_dialog.show()
+        #add_dialog.destroy()
+
 
     def help(self, widget):
         """help - display the help box for Trage"""
@@ -196,4 +204,3 @@ if __name__ == "__main__":
     window = new_window()
     window.show()
     gtk.main()
-

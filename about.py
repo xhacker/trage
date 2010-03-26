@@ -2,7 +2,7 @@
 
 import gtk
 
-class AboutFooDialog(gtk.AboutDialog):
+class AboutTrageDialog(gtk.AboutDialog):
     __gtype_name__ = "AboutTrageDialog"
 
     def __init__(self):
@@ -14,16 +14,17 @@ class AboutFooDialog(gtk.AboutDialog):
 
         #code for other initialization actions should be added here
 
+
 def new_about():
-    ui_filename = 'ui/about.glade'
+    ui_filename = 'ui/about_dialog.glade'
     builder = gtk.Builder()
     builder.add_from_file(ui_filename)    
     dialog = builder.get_object("about_trage_dialog")
     dialog.finish_init(builder)
     return dialog
 
+
 if __name__ == "__main__":
-    dialog = NewAboutFooDialog()
+    dialog = new_about()
     dialog.show()
     gtk.main()
-

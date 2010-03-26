@@ -5,6 +5,7 @@
   <!-- interface-naming-policy project-wide -->
   <object class="AboutTrageDialog" id="about_trage_dialog">
     <property name="border_width">5</property>
+    <property name="destroy_with_parent">True</property>
     <property name="icon">icon.png</property>
     <property name="type_hint">normal</property>
     <property name="program_name">Trage</property>
@@ -28,12 +29,14 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
-    <property name="authors">Xhacker Liu &lt;liu.dongyuan@gmail.com&gt;</property>
+    <property name="authors">Xhacker Liu &lt;liu.dongyuan@gmail.com&gt;
+
+&#x5317;&#x4EAC;&#x5E02;&#x5341;&#x4E00;&#x5B66;&#x6821;&#x7684; Penhu &#x7B49;&#x4EBA;
+&#x4E5F;&#x4F5C;&#x51FA;&#x4E86;&#x5DE8;&#x5927;&#x7684;&#x8D21;&#x732E;&#x3002;</property>
     <property name="logo">logo.png</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child>
           <placeholder/>
