@@ -1,0 +1,9 @@
+<glade-catalog name="add_dialog" domain="glade-3" 
+               depends="gtk+" version="1.0">
+  <glade-widget-classes>
+    <glade-widget-class title="Add Dialog" name="AddDialog" 
+                        generic-name="AddDialog" parent="GtkWindow"
+                        icon-name="widget-gtk-window"/>
+  </glade-widget-classes>
+
+</glade-catalog>
