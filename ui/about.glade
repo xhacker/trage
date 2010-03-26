@@ -8,14 +8,27 @@
     <property name="icon">icon.png</property>
     <property name="type_hint">normal</property>
     <property name="program_name">Trage</property>
-    <property name="version">Dawn 0</property>
-    <property name="copyright" translatable="yes">GPLv3</property>
+    <property name="version">Dawn(M1) 0</property>
+    <property name="copyright" translatable="yes">Copyright (C) 2009-2010 Xhacker Liu</property>
     <property name="comments" translatable="yes">&#x4E00;&#x4E2A;&#x5F00;&#x6E90;&#x7684;&#x8BC4;&#x6D4B;&#x8F6F;&#x4EF6;&#x3002;</property>
     <property name="website">http://www.shiyihcc.com/trage</property>
-    <property name="website_label" translatable="yes">Trage &#x7F51;&#x7AD9;</property>
+    <property name="website_label" translatable="yes">Trage &#x4E3B;&#x9875;</property>
+    <property name="license" translatable="yes">Trage - An open source judge app.
+Copyright (C) 2009-2010 Xhacker Liu
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
     <property name="authors">Xhacker Liu &lt;liu.dongyuan@gmail.com&gt;</property>
-    <property name="documenters"></property>
-    <property name="artists"></property>
     <property name="logo">logo.png</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">

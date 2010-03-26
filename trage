@@ -32,6 +32,11 @@ class TrageWindow(gtk.Window):
 
 
     def judge(self, widget):
+        button_judge = self.builder.get_object('button_judge')
+        button_judge.set_sensitive(False)
+        button_judge.set_label('评测中...')
+        menuitem_judge = self.builder.get_object('menuitem_judge')
+        menuitem_judge.set_sensitive(False)
         t = JudgeThread(self.builder)
         t.start()
     
@@ -162,13 +167,20 @@ class JudgeThread(threading.Thread):
                 str += ' [ Time: %.2fs/%.1fs ] [ Mem: %.2fM/%dM ]' % (tpoint_result['time'], tpoint_result['timelmt'],\
                                                                       tpoint_result['mem'],  tpoint_result['memlmt'])
             gobject.idle_add(self.printv, str + '\n')
-            time.sleep(0.1)
 
         result = judge.get_result()
         if result['AC'] == True:
             self.printv('[ Result: %2d/%2d ] Accepted.\n' % (result['tpoint_correct'], result['tpoint_count']))
         else:
             self.printv('[ Result: %2d/%2d ] Not accepted.\n' % (result['tpoint_correct'], result['tpoint_count']))
+
+
+    def __del__(self):
+        button_judge = self.builder.get_object('button_judge')
+        button_judge.set_sensitive(True)
+        button_judge.set_label('评测(_J)')
+        menuitem_judge = self.builder.get_object('menuitem_judge')
+        menuitem_judge.set_sensitive(True)
 
 
 def new_window():

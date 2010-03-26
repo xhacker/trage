@@ -14,7 +14,6 @@ prob_source = sys.argv[1]
 prob_id     = sys.argv[2]
 source_file = sys.argv[3]
 
-import about
 from judge_common import Judge
 
 judge = Judge(prob_source, prob_id, source_file)

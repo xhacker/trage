@@ -25,7 +25,7 @@
                   <object class="GtkMenu" id="menu1">
                     <property name="visible">True</property>
                     <child>
-                      <object class="GtkImageMenuItem" id="imagemenuitem4">
+                      <object class="GtkImageMenuItem" id="menuitem_judge">
                         <property name="label">&#x8BC4;&#x6D4B;(_J)</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
