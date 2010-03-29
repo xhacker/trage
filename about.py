@@ -14,7 +14,6 @@ class AboutTrageDialog(gtk.AboutDialog):
 
         #code for other initialization actions should be added here
 
-
 def new_about():
     ui_filename = 'ui/about_dialog.glade'
     builder = gtk.Builder()
@@ -22,7 +21,6 @@ def new_about():
     dialog = builder.get_object("about_trage_dialog")
     dialog.finish_init(builder)
     return dialog
-
 
 if __name__ == "__main__":
     dialog = new_about()

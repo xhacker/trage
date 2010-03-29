@@ -12,11 +12,10 @@ class Judge:
         self.lang        = os.path.splitext(source_file)[1].lstrip('.').lower()
         self.prob_dir    = os.path.join(os.getenv("HOME"), ".trage/problem", self.source, self.id)
 
-        
     def load(self):
         '''读取题目配置文件'''
         config_file = os.path.join(self.prob_dir, 'problem.conf')
-        
+
         import ConfigParser
         config    = ConfigParser.RawConfigParser()
         if os.path.lexists(config_file) == False:
@@ -46,7 +45,7 @@ class Judge:
                     self.tpoint_memlmt.append( int( config.get("test_point", "mem_limit_" + str(i)) ) )
         except:
             return 2 # Error
-                
+
     def compile(self):
         '''编译'''
         # Make a link for the source file
@@ -83,7 +82,6 @@ class Judge:
         else:
             return None
 
-        
     def judge(self):
         '''评测一个测试点'''
         if self.tpoint_current >= self.tpoint_count:
@@ -93,7 +91,7 @@ class Judge:
         tpoint = self.tpoint_current
         self.tpoint_current += 1
         self.clean(exe = False)
-        
+
         in_file  = os.path.join(self.prob_dir, str(tpoint) + ".in")
         out_file = os.path.join(tmp_dir, self.name + ".out")
         ans_file = os.path.join(self.prob_dir, str(tpoint) + ".ans")
@@ -107,8 +105,7 @@ class Judge:
             return {'error': 1}
 
         import subprocess
-        os.chdir(tmp_dir)
-        exec_proc = subprocess.Popen("/usr/bin/time -f \"%e\\n%M\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        exec_proc = subprocess.Popen("cd " + tmp_dir + "; /usr/bin/time -f \"%e\\n%M\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
         #exec_proc = subprocess.Popen("cd " + tmp_dir + "; /usr/bin/time -f \"%e\\n%M\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
         # TOO UGLY!!!
         # waitpid, wait4 ?
@@ -130,18 +127,17 @@ class Judge:
         result = {'error': 0, 'tpoint': tpoint + 1,       \
                   'timelmt': self.tpoint_timelmt[tpoint], \
                   'memlmt': self.tpoint_memlmt[tpoint] }
-        
 
         # RTE
         if return_code:
             result['status'] = 'RTE'
             return result
-                
+
         exec_time      = float(exec_proc.stdout.readline())
         result['time'] = exec_time
         exec_mem       = float(exec_proc.stdout.readline()) / 4 / 1000
         result['mem']  = exec_mem
-            
+
         # TLE
         if exec_time > self.tpoint_timelmt[tpoint]:
             result['status'] = 'TLE'
@@ -166,10 +162,9 @@ class Judge:
             # Right answer
             self.tpoint_correct += 1
             result['status'] = 'AC'
-        
+
         return result
 
-    
     def get_result(self):
         if self.tpoint_correct == self.tpoint_count:
             AC = True
@@ -179,7 +174,7 @@ class Judge:
                  'tpoint_correct': self.tpoint_correct,
                  'AC': AC }
 
-    
+
     def clean(self, io = True, exe = True):
         if io:
             if os.path.lexists(os.path.join(tmp_dir, self.name + ".in")):
@@ -190,6 +185,5 @@ class Judge:
             if os.path.lexists(os.path.join(tmp_dir, self.name)):
                 os.remove(os.path.join(tmp_dir, self.name))
 
-                
     def __del__(self):
         self.clean()

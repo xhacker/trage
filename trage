@@ -20,7 +20,6 @@ class TrageWindow(gtk.Window):
     def __init__(self):
         pass
 
-
     def finish_init(self, builder):
         self.builder = builder
         self.builder.connect_signals(self)
@@ -31,23 +30,20 @@ class TrageWindow(gtk.Window):
 
         #code for other initialization actions should be added here
 
-
     def judge(self, widget):
-        button_judge = self.builder.get_object('button_judge')
-        button_judge.set_sensitive(False)
-        button_judge.set_label('评测中...')
+        toolbutton_judge = self.builder.get_object('toolbutton_judge')
+        toolbutton_judge.set_sensitive(False)
+        toolbutton_judge.set_label('评测中...')
         menuitem_judge = self.builder.get_object('menuitem_judge')
         menuitem_judge.set_sensitive(False)
         t = JudgeThread(self.builder)
         t.start()
-
 
     def add(self, widget, data=None):
         """add - display the add box for Trage"""
         add_dialog = add.new_add()
         add_dialog.show()
         #add_dialog.destroy()
-
 
     def help(self, widget):
         """help - display the help box for Trage"""
@@ -56,13 +52,11 @@ class TrageWindow(gtk.Window):
         #about.destroy()
         pass
 
-
     def about(self, widget, data=None):
         """about - display the about box for Trage"""
         about_dialog = about.new_about()
         response = about_dialog.run()
         about_dialog.destroy()
-
 
     def preference(self, widget, data=None):
         """preference - display the preference window for Trage"""
@@ -74,11 +68,9 @@ class TrageWindow(gtk.Window):
         #prefs.destroy()
         pass
 
-
     def quit(self, widget, data=None):
         """quit - signal handler for closing the TrageWindow"""
         self.destroy()
-
 
     def on_destroy(self, widget, data=None):
         """on_destroy - called when the TrageWindow is close"""
@@ -92,8 +84,6 @@ class JudgeThread(threading.Thread):
         self.builder = builder
         self.result_view = self.builder.get_object('result_view')
         self.result_view.modify_font( pango.FontDescription('Monospace') )
-        #self.judge()
-
 
     def printv(self, str):
         """printv - print to the result view"""
@@ -103,12 +93,10 @@ class JudgeThread(threading.Thread):
         self.result_view.scroll_mark_onscreen(mark)
         return False
 
-
     def clearv(self):
         """clearv - clear the result view"""
         self.result_buf = gtk.TextBuffer(None)
         self.result_view.set_buffer(self.result_buf)
-
 
     # Judge
     def run(self):
@@ -182,14 +170,12 @@ class JudgeThread(threading.Thread):
         else:
             self.printv('[ Result: %2d/%2d ] Not accepted.\n' % (result['tpoint_correct'], result['tpoint_count']))
 
-
     def __del__(self):
-        button_judge = self.builder.get_object('button_judge')
-        button_judge.set_sensitive(True)
-        button_judge.set_label('评测(_J)')
+        toolbutton_judge = self.builder.get_object('toolbutton_judge')
+        toolbutton_judge.set_sensitive(True)
+        toolbutton_judge.set_label('评测')
         menuitem_judge = self.builder.get_object('menuitem_judge')
         menuitem_judge.set_sensitive(True)
-
 
 def new_window():
     ui_filename = 'ui/trage_window.glade'
@@ -198,7 +184,6 @@ def new_window():
     window = builder.get_object('trage_window')
     window.finish_init(builder)
     return window
-
 
 if __name__ == "__main__":
     window = new_window()

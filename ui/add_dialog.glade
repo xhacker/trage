@@ -254,12 +254,13 @@
             <property name="visible">True</property>
             <property name="border_width">2</property>
             <child>
-              <object class="GtkButton" id="button3">
-                <property name="label" translatable="yes">&#x589E;&#x52A0;&#x6D4B;&#x8BD5;&#x70B9;(INS)</property>
+              <object class="GtkButton" id="button_tpmore">
+                <property name="label" translatable="yes">&#x589E;&#x52A0;&#x6D4B;&#x8BD5;&#x70B9; (INS)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <accelerator key="Insert" signal="clicked"/>
+                <signal name="clicked" handler="tp_more"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -268,11 +269,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="button4">
-                <property name="label" translatable="yes">&#x51CF;&#x5C11;&#x6D4B;&#x8BD5;&#x70B9;</property>
+              <object class="GtkButton" id="button_tpless">
+                <property name="label" translatable="yes">&#x51CF;&#x5C11;&#x6D4B;&#x8BD5;&#x70B9; (DEL)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <accelerator key="Delete" signal="clicked"/>
+                <signal name="clicked" handler="tp_less"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -312,8 +315,8 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
-                <accelerator key="w" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
                 <accelerator key="q" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
+                <accelerator key="w" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
                 <signal name="clicked" handler="quit"/>
               </object>
               <packing>
