@@ -87,16 +87,20 @@ class JudgeThread(threading.Thread):
 
     def printv(self, str):
         """printv - print to the result view"""
-        self.result_buf.insert(self.result_buf.get_end_iter(), str)
-        self.result_view.set_buffer(self.result_buf)
-        mark = self.result_buf.get_insert()
+        buf = self.result_view.get_buffer()
+        end_iter = buf.get_end_iter()
+        buf.insert(end_iter, str)
+        
+        end_iter.set_line_offset(0)
+        mark = buf.get_mark('scroll')
+        buf.move_mark(mark, end_iter)
         self.result_view.scroll_mark_onscreen(mark)
-        return False
 
     def clearv(self):
         """clearv - clear the result view"""
-        self.result_buf = gtk.TextBuffer(None)
-        self.result_view.set_buffer(self.result_buf)
+        buf = gtk.TextBuffer(None)
+        self.result_view.set_buffer(buf)
+        buf.create_mark('scroll', buf.get_end_iter(), True)
 
     # Judge
     def run(self):
@@ -162,7 +166,8 @@ class JudgeThread(threading.Thread):
             if tpoint_result['status'] in ['AC', 'WA']:
                 str += ' [ Time: %.2fs/%.1fs ] [ Mem: %.2fM/%dM ]' % (tpoint_result['time'], tpoint_result['timelmt'],\
                                                                       tpoint_result['mem'],  tpoint_result['memlmt'])
-            gobject.idle_add(self.printv, str + '\n')
+            #gobject.idle_add(self.printv, str + '\n')
+            self.printv(str + '\n')
 
         result = judge.get_result()
         if result['AC'] == True:

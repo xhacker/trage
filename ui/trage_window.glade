@@ -120,8 +120,49 @@
                 <property name="visible">True</property>
                 <property name="is_important">True</property>
                 <property name="label" translatable="yes">&#x8BC4;&#x6D4B;</property>
-                <property name="icon_name">preferences-other</property>
+                <property name="icon_name">preferences-system</property>
                 <signal name="clicked" handler="judge"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton1">
+                <property name="visible">True</property>
+                <property name="is_important">True</property>
+                <property name="label" translatable="yes">&#x6DFB;&#x52A0;&#x9898;&#x76EE;</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-add</property>
+                <signal name="clicked" handler="add"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton2">
+                <property name="visible">True</property>
+                <property name="is_important">True</property>
+                <property name="label" translatable="yes">&#x7BA1;&#x7406;&#x9898;&#x76EE;</property>
+                <property name="use_underline">True</property>
+                <property name="icon_name">applications-other</property>
+                <signal name="clicked" handler="manage"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="toolbutton3">
+                <property name="is_important">True</property>
+                <property name="label" translatable="yes">&#x9996;&#x9009;&#x9879;</property>
+                <property name="use_underline">True</property>
+                <property name="stock_id">gtk-preferences</property>
+                <signal name="clicked" handler="preference"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -254,10 +295,11 @@
   </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
-    <property name="icon_name">applications-other</property>
+    <property name="yalign">0.47999998927116394</property>
+    <property name="icon_name">preferences-system</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
-    <property name="icon_name">document-new</property>
+    <property name="stock">gtk-add</property>
   </object>
 </interface>
