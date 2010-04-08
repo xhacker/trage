@@ -2,11 +2,25 @@
 
 import gtk
 
+from trage.helpers import get_builder
+
+import gettext
+from gettext import gettext as _
+gettext.textdomain('trage')
+
 class AddDialog(gtk.Window):
     __gtype_name__ = "AddDialog"
 
-    def __init__(self):
-        pass
+    def __new__(cls):
+        """Special static method that's automatically called by Python when 
+        constructing a new instance of this class.
+        
+        Returns a fully instantiated AboutFooDialog object.
+        """
+        builder = get_builder('AddDialog')
+        new_object = builder.get_object("add_dialog")
+        new_object.finish_init(builder)
+        return new_object
 
     def finish_init(self, builder):
         self.builder = builder
@@ -50,16 +64,7 @@ class AddDialog(gtk.Window):
         """on_destroy - called when the AddDialog is close"""
         gtk.main_quit()
 
-
-def new_add():
-    ui_filename = 'ui/add_dialog.glade'
-    builder = gtk.Builder()
-    builder.add_from_file(ui_filename)    
-    dialog = builder.get_object("add_dialog")
-    dialog.finish_init(builder)
-    return dialog
-
 if __name__ == "__main__":
-    dialog = new_add()
+    dialog = AddDialog()
     dialog.show()
     gtk.main()

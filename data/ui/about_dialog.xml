@@ -1,8 +1,8 @@
 <glade-catalog name="about_trage_dialog" domain="glade-3" 
                depends="gtk+" version="1.0">
   <glade-widget-classes>
-    <glade-widget-class title="About Trage Dialog" name="AboutTrageDialog" 
-                        generic-name="AboutTrageDialog" parent="GtkAboutDialog"
+    <glade-widget-class title="About Dialog" name="AboutDialog" 
+                        generic-name="AboutDialog" parent="GtkAboutDialog"
                         icon-name="widget-gtk-about-dialog"/>
   </glade-widget-classes>
 
