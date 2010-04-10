@@ -2,11 +2,11 @@
 
 import gtk
 
-from trage.helpers import get_builder
-
 import gettext
 from gettext import gettext as _
 gettext.textdomain('trage')
+
+from trage.helpers import get_builder
 
 class AddDialog(gtk.Window):
     __gtype_name__ = "AddDialog"
@@ -15,7 +15,7 @@ class AddDialog(gtk.Window):
         """Special static method that's automatically called by Python when 
         constructing a new instance of this class.
         
-        Returns a fully instantiated AboutFooDialog object.
+        Returns a fully instantiated AddFooDialog object.
         """
         builder = get_builder('AddDialog')
         new_object = builder.get_object("add_dialog")
@@ -55,6 +55,9 @@ class AddDialog(gtk.Window):
             button_less.set_sensitive(False)
 
         print self.tp
+
+    def add(self, widget):
+        pass
 
     def quit(self, widget):
         """quit - signal handler for closing the AddDialog"""

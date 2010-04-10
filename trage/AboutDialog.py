@@ -2,11 +2,11 @@
 
 import gtk
 
-from trage.helpers import get_builder
-
 import gettext
 from gettext import gettext as _
 gettext.textdomain('trage')
+
+from trage.helpers import get_builder
 
 class AboutDialog(gtk.AboutDialog):
     __gtype_name__ = "AboutDialog"

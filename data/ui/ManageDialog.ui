@@ -7,7 +7,7 @@
     <property name="width_request">540</property>
     <property name="title" translatable="yes">Trage - &#x6DFB;&#x52A0;&#x9898;&#x76EE;</property>
     <property name="resizable">False</property>
-    <property name="modal">True</property>
+    <property name="window_position">center</property>
     <child>
       <object class="GtkVBox" id="vbox1">
         <property name="visible">True</property>
@@ -48,6 +48,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="add"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -116,8 +117,8 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
-                <accelerator key="q" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
                 <accelerator key="w" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
+                <accelerator key="q" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
                 <signal name="clicked" handler="quit"/>
               </object>
               <packing>

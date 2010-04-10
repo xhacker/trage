@@ -27,7 +27,7 @@ print 'Welcome to Trage!'
 gobject.threads_init()
 
 from trage import (
-    AboutDialog, AddDialog)
+    AboutDialog, AddDialog, ManageDialog)
 from trage.helpers import get_builder
 
 class TrageWindow(gtk.Window):
@@ -69,8 +69,9 @@ class TrageWindow(gtk.Window):
         add.show()
 
     def manage(self, widget, data=None):
-        """add - display the manage box for Trage"""
-        pass
+        """manage - display the manage box for Trage"""
+        manage = ManageDialog.ManageDialog()
+        manage.show()
 
     def help(self, widget):
         """help - display the help box for Trage"""
@@ -115,15 +116,15 @@ class JudgeThread(threading.Thread):
 
     def printv(self, str):
         """printv - print to the result view"""
-        #buf = self.result_view.get_buffer()
-        #end_iter = buf.get_end_iter()
-        #buf.insert(end_iter, str)
+        buf = self.result_view.get_buffer()
+        end_iter = buf.get_end_iter()
+        buf.insert(end_iter, str)
         pass
 
     def clearv(self):
         """clearv - clear the result view"""
-        #buf = gtk.TextBuffer(None)
-        #self.result_view.set_buffer(buf)
+        buf = gtk.TextBuffer(None)
+        self.result_view.set_buffer(buf)
         pass
 
     # Judge
@@ -135,10 +136,9 @@ class JudgeThread(threading.Thread):
             self.clearv()
             self.printv('Problem number should be a number.\n')
             return
-        #prob_id = entry_probid.get_text()
-        #filechooser_source = self.builder.get_object('filechooser_source')
-        #source_file = filechooser_source.get_filename()
-        return
+        prob_id = entry_probid.get_text()
+        filechooser_source = self.builder.get_object('filechooser_source')
+        source_file = filechooser_source.get_filename()
         if source_file == None:
             self.clearv()
             self.printv('Please choose a source file.\n')
@@ -147,7 +147,7 @@ class JudgeThread(threading.Thread):
         # everything seems ok.
         self.clearv()
 
-        from judge_common import Judge
+        from trage.common.judge import Judge
         prob_source = 'user'
         judge = Judge(prob_source, prob_id, source_file)
 
@@ -160,7 +160,7 @@ class JudgeThread(threading.Thread):
             self.printv('Problem config file error, please report the bug to the developers.\n')
             return
 
-        from prob_common import Problem
+        from trage.common.problem import Problem
         prob = Problem(prob_source, prob_id)
         if prob.load():
             self.printv('Problem config file error, please report the bug to the developers.')
