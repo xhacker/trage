@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import gtk
+import gobject
 
 import gettext
 from gettext import gettext as _
@@ -9,6 +10,12 @@ gettext.textdomain('trage')
 from trage import (
     AddDialog)
 from trage.helpers import get_builder
+
+(
+    COLUMN_ID,
+    COLUMN_NAME,
+    COLUMN_TITLE,
+) = range(3)
 
 class ManageDialog(gtk.Window):
     __gtype_name__ = "ManageDialog"
@@ -29,6 +36,32 @@ class ManageDialog(gtk.Window):
         self.builder.connect_signals(self)
 
         #code for other initialization actions should be added here
+        self.init_treeview()
+
+    def init_treeview(self):
+        treeview = self.builder.get_object('treeview_prob')
+
+        # create model
+        model = gtk.ListStore(
+                            gobject.TYPE_STRING,
+                            gobject.TYPE_STRING,
+                            gobject.TYPE_STRING)
+
+        model.append(('1', 'dafafsd', 'asdfsdf'))
+        model.append(('1', 'dafafsd', 'asdfsdf'))
+        model.append(('1', 'dafafsd', 'asdfsdf'))
+
+        treeview.set_model(model)
+
+        
+        column = gtk.TreeViewColumn(_('Problem id'), gtk.CellRendererText(), text = COLUMN_ID)
+        treeview.append_column(column)
+
+        column = gtk.TreeViewColumn(_('Problem name'), gtk.CellRendererText(), text = COLUMN_NAME)
+        treeview.append_column(column)
+
+        column = gtk.TreeViewColumn(_('Problem title'), gtk.CellRendererText(), text = COLUMN_TITLE)
+        treeview.append_column(column)
 
     def add(self, widget, data=None):
         """add - display the add box for Trage"""
