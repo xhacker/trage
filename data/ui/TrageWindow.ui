@@ -18,14 +18,14 @@
             <child>
               <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x4E3B;&#x8981;(_M)</property>
+                <property name="label" translatable="yes">Main(_M)</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu1">
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImageMenuItem" id="menuitem_judge">
-                        <property name="label">&#x8BC4;&#x6D4B;(_J)</property>
+                        <property name="label">Judge(_J)</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="image">image1</property>
@@ -36,7 +36,7 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="menuitem_add">
-                        <property name="label">&#x6DFB;&#x52A0;&#x9898;&#x76EE;(_A)</property>
+                        <property name="label">Add Problem(_A)</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="image">image2</property>
@@ -78,7 +78,7 @@
             <child>
               <object class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x5E2E;&#x52A9;(_H)</property>
+                <property name="label" translatable="yes">Help(_H)</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu3">
@@ -119,7 +119,7 @@
               <object class="GtkToolButton" id="toolbutton_judge">
                 <property name="visible">True</property>
                 <property name="is_important">True</property>
-                <property name="label" translatable="yes">&#x8BC4;&#x6D4B;</property>
+                <property name="label" translatable="yes">Judge</property>
                 <property name="icon_name">preferences-system</property>
                 <signal name="clicked" handler="judge"/>
               </object>
@@ -132,7 +132,7 @@
               <object class="GtkToolButton" id="toolbutton1">
                 <property name="visible">True</property>
                 <property name="is_important">True</property>
-                <property name="label" translatable="yes">&#x6DFB;&#x52A0;&#x9898;&#x76EE;</property>
+                <property name="label" translatable="yes">Add Problem</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-add</property>
                 <signal name="clicked" handler="add"/>
@@ -146,7 +146,7 @@
               <object class="GtkToolButton" id="toolbutton2">
                 <property name="visible">True</property>
                 <property name="is_important">True</property>
-                <property name="label" translatable="yes">&#x7BA1;&#x7406;&#x9898;&#x76EE;</property>
+                <property name="label" translatable="yes">Manage Problem</property>
                 <property name="use_underline">True</property>
                 <property name="icon_name">applications-other</property>
                 <signal name="clicked" handler="manage"/>
@@ -195,7 +195,7 @@
             <child>
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x9898;&#x76EE;&#x7F16;&#x53F7;</property>
+                <property name="label" translatable="yes">Problem ID</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -229,7 +229,7 @@
             <child>
               <object class="GtkLabel" id="label4">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x6E90;&#x6587;&#x4EF6;</property>
+                <property name="label" translatable="yes">Source File</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -281,7 +281,7 @@
             <child type="label">
               <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&lt;b&gt;&#x8BC4;&#x6D4B;&#x7ED3;&#x679C;&lt;/b&gt;</property>
+                <property name="label" translatable="yes">&lt;b&gt;Judge Result&lt;/b&gt;</property>
                 <property name="use_markup">True</property>
               </object>
             </child>

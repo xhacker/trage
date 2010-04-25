@@ -24,8 +24,6 @@ import threading
 
 print _('Welcome to Trage!')
 
-gobject.threads_init()
-
 from trage import (
     AboutDialog, AddDialog, ManageDialog)
 from trage.helpers import get_builder
@@ -55,11 +53,6 @@ class TrageWindow(gtk.Window):
         #code for other initialization actions should be added here
 
     def judge(self, widget):
-        toolbutton_judge = self.builder.get_object('toolbutton_judge')
-        toolbutton_judge.set_sensitive(False)
-        toolbutton_judge.set_label(_('Judging...'))#TODO
-        menuitem_judge = self.builder.get_object('menuitem_judge')
-        menuitem_judge.set_sensitive(False)
         t = JudgeThread(self.builder)
         t.start()
 
@@ -106,6 +99,16 @@ class TrageWindow(gtk.Window):
 
         gtk.main_quit()
 
+from functools import wraps
+def threadlock(f):
+    @wraps(f)
+    def wrapper(*args, **kwds):
+        gtk.gdk.threads_enter()
+        ret = f(*args, **kwds)
+        gtk.gdk.threads_leave()
+        return ret
+    return wrapper
+
 class JudgeThread(threading.Thread):
     def __init__(self, builder):
         super(JudgeThread, self).__init__()
@@ -113,14 +116,16 @@ class JudgeThread(threading.Thread):
         self.result_view = self.builder.get_object('result_view')
         self.result_view.modify_font( pango.FontDescription('Monospace') )
 
-    def printv(self, str):
-        """printv - print to the result view"""
+    @threadlock
+    def vprint(self, str):
+        """vprint - print to the result view"""
         buf = self.result_view.get_buffer()
         end_iter = buf.get_end_iter()
         buf.insert(end_iter, str)
 
-    def clearv(self):
-        """clearv - clear the result view"""
+    @threadlock
+    def vclear(self):
+        """vclear - clear the result view"""
         buf = gtk.TextBuffer(None)
         self.result_view.set_buffer(buf)
 
@@ -130,50 +135,56 @@ class JudgeThread(threading.Thread):
 
         entry_probid = self.builder.get_object('entry_probid')
         if entry_probid.get_text().isdigit() == False:
-            self.clearv()
-            self.printv(_('Problem number should be a number.\n'))
+            self.vclear()
+            self.vprint(_('Problem number should be a number.\n'))
             return
         prob_id = entry_probid.get_text()
         filechooser_source = self.builder.get_object('filechooser_source')
         source_file = filechooser_source.get_filename()
         if source_file == None:
-            self.clearv()
-            self.printv(_('Please choose a source file.\n'))
+            self.vclear()
+            self.vprint(_('Please choose a source file.\n'))
             return
 
         # everything seems ok.
-        self.clearv()
+        self.vclear()
+
+        toolbutton_judge = self.builder.get_object('toolbutton_judge')
+        toolbutton_judge.set_sensitive(False)
+        toolbutton_judge.set_label(_('Judging...'))
+        menuitem_judge = self.builder.get_object('menuitem_judge')
+        menuitem_judge.set_sensitive(False)
 
         from trage.common.judge import Judge
         prob_source = 'user'
         judge = Judge(prob_source, prob_id, source_file)
 
-        self.printv(_('== Load Problem ============\n'))
+        self.vprint(_('== Load Problem ============\n'))
         load_err = judge.load()
         if load_err == 1:
-            self.printv(_('Wrong problem id.\n'))
+            self.vprint(_('Wrong problem id.\n'))
             return
         if load_err == 2:
-            self.printv(_('Problem config file error, please report the bug to the developers.\n'))
+            self.vprint(_('Problem config file error, please report the bug to the developers.\n'))
             return
 
         from trage.common.problem import Problem
         prob = Problem(prob_source, prob_id)
         if prob.load():
-            self.printv(_('Problem config file error, please report the bug to the developers.'))
+            self.vprint(_('Problem config file error, please report the bug to the developers.'))
             return
-        self.printv(_('Problem: %s (Problem source: "%s", id: %s)\n') % (prob.get_name(), prob_source, prob_id))
+        self.vprint(_('Problem: %s (Problem source: "%s", id: %s)\n') % (prob.get_name(), prob_source, prob_id))
 
-        self.printv(_('== Compile ============\n'))
-        self.printv(_('Compiling...\n'))
+        self.vprint(_('== Compile ============\n'))
+        self.vprint(_('Compiling...\n'))
         compile_err = judge.compile()
         if compile_err:
-            self.printv(_('Compile failed. Error:\n'))
-            self.printv(compile_err)
+            self.vprint(_('Compile failed. Error:\n'))
+            self.vprint(compile_err)
             return
-        self.printv(_('Done.\n'))
+        self.vprint(_('Done.\n'))
 
-        self.printv(_('== Judge ============\n'))
+        self.vprint(_('== Judge ============\n'))
         while True:
             tpoint_result = judge.judge()
 
@@ -181,22 +192,23 @@ class JudgeThread(threading.Thread):
                 break
 
             if tpoint_result['error']:
-                self.printv(_('Problem data file error.\n'))
+                self.vprint(_('Problem data file error.\n'))
                 return
 
             str = _('[ Test %2d ] [ %3s ]') % (tpoint_result['tpoint'], tpoint_result['status'])
             if tpoint_result['status'] in ['AC', 'WA']:
                 str += _(' [ Time: %.2fs/%.1fs ] [ Mem: %.2fM/%dM ]') % (tpoint_result['time'], tpoint_result['timelmt'],\
                                                                       tpoint_result['mem'],  tpoint_result['memlmt'])
-            #gobject.idle_add(self.printv, str + '\n')
-            self.printv(str + '\n')
+            #gobject.idle_add(self.vprint, str + '\n')
+            self.vprint(str + '\n')
 
         result = judge.get_result()
         if result['AC'] == True:
-            self.printv(_('[ Result: %2d/%2d ] Accepted.\n') % (result['tpoint_correct'], result['tpoint_count']))
+            self.vprint(_('[ Result: %2d/%2d ] Accepted.\n') % (result['tpoint_correct'], result['tpoint_count']))
         else:
-            self.printv(_('[ Result: %2d/%2d ] Not accepted.\n') % (result['tpoint_correct'], result['tpoint_count']))
+            self.vprint(_('[ Result: %2d/%2d ] Not accepted.\n') % (result['tpoint_correct'], result['tpoint_count']))
 
+    @threadlock
     def __del__(self):
         toolbutton_judge = self.builder.get_object('toolbutton_judge')
         toolbutton_judge.set_sensitive(True)
@@ -205,7 +217,12 @@ class JudgeThread(threading.Thread):
         menuitem_judge.set_sensitive(True)
         return
 
-if __name__ == "__main__":
+@threadlock
+def main():
     window = TrageWindow()
     window.show()
     gtk.main()
+
+if __name__ == "__main__":
+    gtk.gdk.threads_init()
+    main()

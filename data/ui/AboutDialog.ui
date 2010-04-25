@@ -11,9 +11,10 @@
     <property name="program_name">Trage</property>
     <property name="version">Dawn(M1) 0</property>
     <property name="copyright" translatable="yes">Copyright (C) 2009-2010 Xhacker Liu</property>
-    <property name="comments" translatable="yes">&#x4E00;&#x4E2A;&#x5F00;&#x6E90;&#x7684;&#x8BC4;&#x6D4B;&#x8F6F;&#x4EF6;&#x3002;</property>
+    <property name="comments" translatable="yes">Trage = Train + Judge.
+A open source judge app.</property>
     <property name="website">http://www.shiyihcc.com/trage</property>
-    <property name="website_label" translatable="yes">Trage &#x4E3B;&#x9875;</property>
+    <property name="website_label" translatable="yes">Trage Website</property>
     <property name="license" translatable="yes">Trage - An open source judge app.
 Copyright (C) 2009-2010 Xhacker Liu
 

@@ -5,7 +5,7 @@
   <!-- interface-naming-policy project-wide -->
   <object class="AddDialog" id="add_dialog">
     <property name="width_request">540</property>
-    <property name="title" translatable="yes">Trage - &#x6DFB;&#x52A0;&#x9898;&#x76EE;</property>
+    <property name="title" translatable="yes">Trage - Add Problem</property>
     <property name="resizable">False</property>
     <property name="window_position">center</property>
     <child>
@@ -31,7 +31,7 @@
               <object class="GtkLabel" id="label1">
                 <property name="visible">True</property>
                 <property name="xalign">0</property>
-                <property name="label" translatable="yes">&#x6DFB;&#x52A0;&#x9898;&#x76EE;</property>
+                <property name="label" translatable="yes">Add Problem</property>
                 <attributes>
                   <attribute name="size" value="18000"/>
                 </attributes>
@@ -61,7 +61,7 @@
             <child>
               <object class="GtkLabel" id="label2">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x9898;&#x76EE;&#x6807;&#x9898;</property>
+                <property name="label" translatable="yes">Problem Title</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -93,7 +93,7 @@
             <child>
               <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x9898;&#x76EE;&#x540D;</property>
+                <property name="label" translatable="yes">Problem Name</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -130,7 +130,7 @@
             <child>
               <object class="GtkLabel" id="label4">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x6D4B;&#x8BD5;&#x70B9;</property>
+                <property name="label" translatable="yes">Test Point</property>
               </object>
               <packing>
                 <property name="x_options">GTK_FILL</property>
@@ -139,7 +139,7 @@
             <child>
               <object class="GtkLabel" id="label5">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x8F93;&#x5165;&#x6587;&#x4EF6;</property>
+                <property name="label" translatable="yes">Input File</property>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -149,7 +149,7 @@
             <child>
               <object class="GtkLabel" id="label6">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x7B54;&#x6848;&#x6587;&#x4EF6;</property>
+                <property name="label" translatable="yes">Answer File</property>
               </object>
               <packing>
                 <property name="left_attach">2</property>
@@ -159,7 +159,7 @@
             <child>
               <object class="GtkLabel" id="label7">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x65F6;&#x95F4;&#x9650;&#x5236;</property>
+                <property name="label" translatable="yes">Time Limit</property>
               </object>
               <packing>
                 <property name="left_attach">3</property>
@@ -170,7 +170,7 @@
             <child>
               <object class="GtkLabel" id="label8">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">&#x5185;&#x5B58;&#x9650;&#x5236;</property>
+                <property name="label" translatable="yes">Mem Limit</property>
               </object>
               <packing>
                 <property name="left_attach">4</property>
@@ -255,7 +255,7 @@
             <property name="border_width">2</property>
             <child>
               <object class="GtkButton" id="button_tpmore">
-                <property name="label" translatable="yes">&#x589E;&#x52A0;&#x6D4B;&#x8BD5;&#x70B9; (INS)</property>
+                <property name="label" translatable="yes">Add Test Point (INS)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -270,7 +270,7 @@
             </child>
             <child>
               <object class="GtkButton" id="button_tpless">
-                <property name="label" translatable="yes">&#x51CF;&#x5C11;&#x6D4B;&#x8BD5;&#x70B9; (DEL)</property>
+                <property name="label" translatable="yes">Delete Test Point (DEL)</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -315,8 +315,8 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
-                <accelerator key="q" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
                 <accelerator key="w" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
+                <accelerator key="q" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
                 <signal name="clicked" handler="quit"/>
               </object>
               <packing>
