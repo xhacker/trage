@@ -104,7 +104,10 @@ def threadlock(f):
     @wraps(f)
     def wrapper(*args, **kwds):
         gtk.gdk.threads_enter()
-        ret = f(*args, **kwds)
+        try:
+            ret = f(*args, **kwds)
+        except:
+            print 'Thread error!'
         gtk.gdk.threads_leave()
         return ret
     return wrapper
@@ -129,10 +132,23 @@ class JudgeThread(threading.Thread):
         buf = gtk.TextBuffer(None)
         self.result_view.set_buffer(buf)
 
+    @threadlock
+    def set_judge_clickable(self, clickable):
+        toolbutton_judge = self.builder.get_object('toolbutton_judge')
+        toolbutton_judge.set_sensitive(clickable)
+        if clickable:
+            toolbutton_judge.set_label(_('Judge'))
+        else:
+            toolbutton_judge.set_label(_('Judging'))
+        menuitem_judge = self.builder.get_object('menuitem_judge')
+        menuitem_judge.set_sensitive(clickable)
+
     # Judge
     def run(self):
         """judge - judge current problem"""
 
+        self.set_judge_clickable(False)
+        
         entry_probid = self.builder.get_object('entry_probid')
         if entry_probid.get_text().isdigit() == False:
             self.vclear()
@@ -148,12 +164,6 @@ class JudgeThread(threading.Thread):
 
         # everything seems ok.
         self.vclear()
-
-        toolbutton_judge = self.builder.get_object('toolbutton_judge')
-        toolbutton_judge.set_sensitive(False)
-        toolbutton_judge.set_label(_('Judging...'))
-        menuitem_judge = self.builder.get_object('menuitem_judge')
-        menuitem_judge.set_sensitive(False)
 
         from trage.common.judge import Judge
         prob_source = 'user'
@@ -175,7 +185,7 @@ class JudgeThread(threading.Thread):
             return
         self.vprint(_('Problem: %s (Problem source: "%s", id: %s)\n') % (prob.get_name(), prob_source, prob_id))
 
-        self.vprint(_('== Compile ============\n'))
+        self.vprint(_('== Compile =================\n'))
         self.vprint(_('Compiling...\n'))
         compile_err = judge.compile()
         if compile_err:
@@ -184,7 +194,7 @@ class JudgeThread(threading.Thread):
             return
         self.vprint(_('Done.\n'))
 
-        self.vprint(_('== Judge ============\n'))
+        self.vprint(_('== Judge ===================\n'))
         while True:
             tpoint_result = judge.judge()
 
@@ -208,14 +218,8 @@ class JudgeThread(threading.Thread):
         else:
             self.vprint(_('[ Result: %2d/%2d ] Not accepted.\n') % (result['tpoint_correct'], result['tpoint_count']))
 
-    @threadlock
     def __del__(self):
-        toolbutton_judge = self.builder.get_object('toolbutton_judge')
-        toolbutton_judge.set_sensitive(True)
-        toolbutton_judge.set_label(_('Judge'))
-        menuitem_judge = self.builder.get_object('menuitem_judge')
-        menuitem_judge.set_sensitive(True)
-        return
+        self.set_judge_clickable(True)
 
 @threadlock
 def main():

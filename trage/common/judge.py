@@ -1,7 +1,12 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
+import gettext
+from gettext import gettext as _
+gettext.textdomain('trage')
+
 import os
+import time
 tmp_dir = '/tmp/'
 
 class Judge:
@@ -13,7 +18,7 @@ class Judge:
         self.prob_dir    = os.path.join(os.getenv("HOME"), ".trage/problem", self.source, self.id)
 
     def load(self):
-        '''读取题目配置文件'''
+        '''Load problem config file'''
         config_file = os.path.join(self.prob_dir, 'problem.conf')
 
         import ConfigParser
@@ -47,29 +52,27 @@ class Judge:
             return 2 # Error
 
     def compile(self):
-        '''编译'''
+        '''Compile'''
         # Make a link for the source file
         abs_source_file = os.path.abspath(self.source_file)
         if os.path.lexists(self.source_file) == False:
-            return "Source file does not exist."
+            return _('Source file does not exist.')
         if os.path.lexists( os.path.join(tmp_dir, self.name + "." + self.lang) ):
             os.remove( os.path.join(tmp_dir, self.name + "." + self.lang) )
         try:
             os.symlink(abs_source_file, os.path.join(tmp_dir, self.name + "." + self.lang))
         except:
-            return "An error has occured, please report the bug to the developers."
+            return _('An error has occured, please report the bug to the developers.')
 
         # Compile command
         if self.lang == "c":
             compile_command = 'gcc -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
         elif self.lang == "cpp":
-            # 实验性支持 C++
             compile_command = 'g++ -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
         elif self.lang == "pas":
-            # 实验性支持 Pascal
-            compile_command = 'fpc -o"%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
+            compile_command = 'fpc -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
         else:
-            return "Sorry, we don't support your programming language currently."
+            return _('Sorry, we don\'t support your programming language currently.')
 
         # Compile
         import subprocess
@@ -83,7 +86,7 @@ class Judge:
             return None
 
     def judge(self):
-        '''评测一个测试点'''
+        '''Judge a test point'''
         if self.tpoint_current >= self.tpoint_count:
             self.clean()
             return None
@@ -105,24 +108,28 @@ class Judge:
             return {'error': 1}
 
         import subprocess
-        exec_proc = subprocess.Popen("cd " + tmp_dir + "; /usr/bin/time -f \"%e\\n%M\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
-        #exec_proc = subprocess.Popen("cd " + tmp_dir + "; /usr/bin/time -f \"%e\\n%M\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
-        # TOO UGLY!!!
-        # waitpid, wait4 ?
-        # for j in range(0, 10000):
-        # if j > self.tpoint_timelmt[i] * 2 * 10:
-        # try:
-        # exec_proc.kill()
-        # except:
-        # pass
-        # return_code = 0
-        # TLE_flag = True
-        # break
-        # time.sleep(0.1)
-        # if exec_proc.poll() == 0:
-        # return_code = exec_proc.returncode()
-        # break
-        return_code = exec_proc.wait()
+
+        org_dir = os.getcwd()
+        os.chdir(tmp_dir)
+        exec_proc = subprocess.Popen("/usr/bin/time -f \"%e\\n%M\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        os.chdir(org_dir)
+
+        # TODO: read preference
+        time_multiple = 1.5
+        max_time = self.tpoint_timelmt[tpoint] * time_multiple;
+        cur_time = 0.0
+        return_code = 0
+        TLE = False
+        while cur_time <= max_time:
+            if exec_proc.poll() != None:
+                return_code = exec_proc.poll()
+                break
+            time.sleep(0.1)
+            cur_time += 0.1
+
+        if cur_time > max_time:
+            exec_proc.kill()
+            TLE = True
 
         result = {'error': 0, 'tpoint': tpoint + 1,       \
                   'timelmt': self.tpoint_timelmt[tpoint], \
@@ -133,10 +140,13 @@ class Judge:
             result['status'] = 'RTE'
             return result
 
-        exec_time      = float(exec_proc.stdout.readline())
-        result['time'] = exec_time
-        exec_mem       = float(exec_proc.stdout.readline()) / 4 / 1000
-        result['mem']  = exec_mem
+        if TLE:
+            exec_time = cur_time
+        else:
+            exec_time      = float(exec_proc.stdout.readline())
+            result['time'] = exec_time
+            exec_mem       = float(exec_proc.stdout.readline()) / 4 / 1000
+            result['mem']  = exec_mem
 
         # TLE
         if exec_time > self.tpoint_timelmt[tpoint]:
