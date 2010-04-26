@@ -11,7 +11,7 @@ class Problem:
         # Get directory path
         import os
         prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem", self.source, self.id)
-        
+
         # Read problem config file
         import ConfigParser
         config        = ConfigParser.RawConfigParser()
@@ -24,10 +24,10 @@ class Problem:
         # Read database
         # TODO
         self.info = None
-    
+
     def get_name(self):
         return self.name
-    
+
     def get_info(self):
         return self.info
         pass

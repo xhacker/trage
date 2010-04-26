@@ -25,7 +25,7 @@
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImageMenuItem" id="menuitem_judge">
-                        <property name="label">Judge(_J)</property>
+                        <property name="label">_Judge</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="image">image1</property>
@@ -36,13 +36,23 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="menuitem_add">
-                        <property name="label">Add Problem(_A)</property>
+                        <property name="label">_Add Problem</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="image">image2</property>
                         <property name="use_stock">False</property>
                         <accelerator key="n" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                         <signal name="activate" handler="add"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="menuitem2">
+                        <property name="label" translatable="yes">_Manage Problem</property>
+                        <property name="visible">True</property>
+                        <property name="use_underline">True</property>
+                        <property name="image">image3</property>
+                        <property name="use_stock">False</property>
+                        <signal name="activate" handler="manage"/>
                       </object>
                     </child>
                     <child>
@@ -295,11 +305,14 @@
   </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
-    <property name="yalign">0.47999998927116394</property>
     <property name="icon_name">preferences-system</property>
   </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="stock">gtk-add</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="stock">gtk-missing-image</property>
   </object>
 </interface>

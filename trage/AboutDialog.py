@@ -12,9 +12,9 @@ class AboutDialog(gtk.AboutDialog):
     __gtype_name__ = "AboutDialog"
 
     def __new__(cls):
-        """Special static method that's automatically called by Python when 
+        """Special static method that's automatically called by Python when
         constructing a new instance of this class.
-        
+
         Returns a fully instantiated AboutFooDialog object.
         """
         builder = get_builder('AboutDialog')

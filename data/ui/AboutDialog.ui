@@ -5,6 +5,7 @@
   <!-- interface-naming-policy project-wide -->
   <object class="AboutDialog" id="about_dialog">
     <property name="border_width">5</property>
+    <property name="window_position">center</property>
     <property name="destroy_with_parent">True</property>
     <property name="icon">../media/icon.png</property>
     <property name="type_hint">normal</property>
@@ -12,7 +13,7 @@
     <property name="version">Dawn(M1) 0</property>
     <property name="copyright" translatable="yes">Copyright (C) 2009-2010 Xhacker Liu</property>
     <property name="comments" translatable="yes">Trage = Train + Judge.
-A open source judge app.</property>
+An open source judge app.</property>
     <property name="website">http://www.shiyihcc.com/trage</property>
     <property name="website_label" translatable="yes">Trage Website</property>
     <property name="license" translatable="yes">Trage - An open source judge app.
@@ -32,16 +33,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
     <property name="authors">Xhacker Liu &lt;liu.dongyuan@gmail.com&gt;
 
-&#x5317;&#x4EAC;&#x5E02;&#x5341;&#x4E00;&#x5B66;&#x6821;&#x7684; Penhu &#x7B49;&#x4EBA;
-&#x4E5F;&#x4F5C;&#x51FA;&#x4E86;&#x5DE8;&#x5927;&#x7684;&#x8D21;&#x732E;&#x3002;</property>
+Penhu and others from
+Beijing Nation Day School
+also made some great
+contribution.</property>
     <property name="logo">../media/logo.png</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">
         <property name="visible">True</property>
-        <property name="spacing">2</property>
-        <child>
-          <placeholder/>
-        </child>
         <child internal-child="action_area">
           <object class="GtkHButtonBox" id="dialog-action_area1">
             <property name="visible">True</property>

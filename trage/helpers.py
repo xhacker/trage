@@ -13,9 +13,9 @@ from gettext import gettext as _
 gettext.textdomain('trage')
 
 def get_builder(builder_file_name):
-    """Return a fully-instantiated gtk.Builder instance from specified ui 
+    """Return a fully-instantiated gtk.Builder instance from specified ui
     file
-    
+
     :param builder_file_name: The name of the builder file, without extension.
         Assumed to be in the 'ui' directory under the data path.
     """

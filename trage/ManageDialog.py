@@ -21,9 +21,9 @@ class ManageDialog(gtk.Window):
     __gtype_name__ = "ManageDialog"
 
     def __new__(cls):
-        """Special static method that's automatically called by Python when 
+        """Special static method that's automatically called by Python when
         constructing a new instance of this class.
-        
+
         Returns a fully instantiated ManageFooDialog object.
         """
         builder = get_builder('ManageDialog')
@@ -47,20 +47,22 @@ class ManageDialog(gtk.Window):
                             gobject.TYPE_STRING,
                             gobject.TYPE_STRING)
 
-        model.append(('1', 'dafafsd', 'asdfsdf'))
-        model.append(('1', 'dafafsd', 'asdfsdf'))
-        model.append(('1', 'dafafsd', 'asdfsdf'))
+        # TODO
+        # Sample
+        model.append(('1', 'plus', 'A + B Problem'))
+        model.append(('2', 'ccc10-1', 'CCC 2010 1'))
+        model.append(('3', 'apple', '陶陶摘苹果'))
 
         treeview.set_model(model)
 
-        
-        column = gtk.TreeViewColumn(_('Problem id'), gtk.CellRendererText(), text = COLUMN_ID)
+
+        column = gtk.TreeViewColumn(_('ID'), gtk.CellRendererText(), text = COLUMN_ID)
         treeview.append_column(column)
 
-        column = gtk.TreeViewColumn(_('Problem name'), gtk.CellRendererText(), text = COLUMN_NAME)
+        column = gtk.TreeViewColumn(_('Name'), gtk.CellRendererText(), text = COLUMN_NAME)
         treeview.append_column(column)
 
-        column = gtk.TreeViewColumn(_('Problem title'), gtk.CellRendererText(), text = COLUMN_TITLE)
+        column = gtk.TreeViewColumn(_('Title'), gtk.CellRendererText(), text = COLUMN_TITLE)
         treeview.append_column(column)
 
     def add(self, widget, data=None):
