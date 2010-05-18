@@ -4,12 +4,11 @@
   <!-- interface-requires add_dialog 1.0 -->
   <!-- interface-naming-policy project-wide -->
   <object class="AddDialog" id="add_dialog">
-    <property name="width_request">540</property>
+    <property name="width_request">620</property>
     <property name="title" translatable="yes">Trage - Add Problem</property>
-    <property name="resizable">False</property>
     <property name="window_position">center</property>
     <child>
-      <object class="GtkVBox" id="vbox1">
+      <object class="GtkVBox" id="vbox">
         <property name="visible">True</property>
         <child>
           <object class="GtkHBox" id="hbox1">
@@ -43,6 +42,7 @@
             </child>
           </object>
           <packing>
+            <property name="expand">False</property>
             <property name="position">0</property>
           </packing>
         </child>
@@ -83,6 +83,7 @@
             </child>
           </object>
           <packing>
+            <property name="expand">False</property>
             <property name="padding">5</property>
             <property name="position">2</property>
           </packing>
@@ -115,65 +116,24 @@
             </child>
           </object>
           <packing>
+            <property name="expand">False</property>
             <property name="padding">5</property>
             <property name="position">3</property>
           </packing>
         </child>
         <child>
-          <object class="GtkTable" id="table_tp">
+          <object class="GtkScrolledWindow" id="scrolledwindow1">
+            <property name="height_request">200</property>
             <property name="visible">True</property>
-            <property name="border_width">8</property>
-            <property name="n_columns">5</property>
-            <property name="column_spacing">4</property>
+            <property name="can_focus">True</property>
+            <property name="border_width">10</property>
+            <property name="hscrollbar_policy">automatic</property>
+            <property name="vscrollbar_policy">automatic</property>
             <child>
-              <object class="GtkLabel" id="label4">
+              <object class="GtkTreeView" id="treeview_tp">
                 <property name="visible">True</property>
+                <property name="can_focus">True</property>
               </object>
-              <packing>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label5">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Input File</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="right_attach">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label6">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Answer File</property>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="right_attach">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label7">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Time Limit</property>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="right_attach">4</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="label8">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Mem Limit</property>
-              </object>
-              <packing>
-                <property name="left_attach">4</property>
-                <property name="right_attach">5</property>
-                <property name="x_options">GTK_FILL</property>
-              </packing>
             </child>
           </object>
           <packing>
@@ -216,6 +176,7 @@
             </child>
           </object>
           <packing>
+            <property name="expand">False</property>
             <property name="position">5</property>
           </packing>
         </child>
@@ -258,6 +219,7 @@
             </child>
           </object>
           <packing>
+            <property name="expand">False</property>
             <property name="position">6</property>
           </packing>
         </child>

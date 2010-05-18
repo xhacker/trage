@@ -35,7 +35,7 @@ class ManageDialog(gtk.Window):
         self.builder = builder
         self.builder.connect_signals(self)
 
-        #code for other initialization actions should be added here
+        #code for other initialization actions
         self.init_treeview()
 
     def init_treeview(self):
