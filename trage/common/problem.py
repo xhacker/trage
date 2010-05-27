@@ -4,7 +4,7 @@
 class Problem:
     def __init__(self, source, id):
         self.source = source
-        self.id     = id
+        self.id = id
 
     def load(self):
         '''读取题目配置文件及数据库'''
@@ -14,10 +14,11 @@ class Problem:
 
         # Read problem config file
         import ConfigParser
-        config        = ConfigParser.RawConfigParser()
+        config = ConfigParser.RawConfigParser()
         try:
             config.read(os.path.join(prob_dir, "problem.conf"))
             self.name = config.get("main", "name")
+            self.title = config.get("main", "title")
         except:
             return 1 # Error
 
@@ -28,9 +29,11 @@ class Problem:
     def get_name(self):
         return self.name
 
+    def get_title(self):
+        return self.title
+
     def get_info(self):
         return self.info
-        pass
 
     def get_problist(self):
         # TODO

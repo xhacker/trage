@@ -38,6 +38,7 @@ class AddDialog(gtk.Window):
         self.builder.connect_signals(self)
 
         # Code for other initialization actions
+
         self.init_treeview()
 
         self.tp = 0
@@ -156,13 +157,52 @@ class AddDialog(gtk.Window):
             button_less = self.builder.get_object('button_tpless')
             button_less.set_sensitive(False)
 
+    def alert(self, text):
+        alert_dialog = gtk.MessageDialog(buttons = gtk.BUTTONS_OK, message_format = text)
+        result = alert_dialog.run()
+        alert_dialog.destroy()
+
     def add(self, widget):
         # Check
         entry_probtitle = self.builder.get_object('entry_probtitle')
         entry_probname = self.builder.get_object('entry_probname')
+        prob_name = entry_probname.get_text()
+        prob_title = entry_probtitle.get_text()
+        filechooser = self.builder.get_object('filechooser_probbasedir')
+        basedir = filechooser.get_filename()
+
+        if not prob_title:
+            self.alert(_('Please enter problem title.'))
+            return
+
+        if not prob_name:
+            self.alert(_('Please enter problem name.'))
+            return
+
+        model_iter = self.model.get_iter_first()
+        for i in range(self.tp):
+            in_file = self.model.get_value(model_iter, COLUMN_INFILE)
+            ans_file = self.model.get_value(model_iter, COLUMN_ANSFILE)
+
+            if (not in_file) or (not ans_file):
+                self.alert(_('Every test point should have a input file and a output file.'))
+                return
+
+            in_file = os.path.join(basedir, in_file)
+            if not os.path.isfile(in_file):
+                self.alert(_("Test point %d's input file not exist. Please select a valid file.") % (i + 1))
+                self.update_stores()
+                return
+
+            ans_file = os.path.join(basedir, ans_file)
+            if not os.path.isfile(ans_file):
+                self.alert(_("Test point %d's answer file not exist. Please select a valid file.") % (i + 1))
+                self.update_stores()
+                return
 
         # Get a new problem ID
         prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
+        # TODO: TOO UGLY
         for i in range(999999):
             if not os.path.exists(os.path.join(prob_dir, str(i))):
                 break
@@ -170,8 +210,7 @@ class AddDialog(gtk.Window):
 
         # Make problem dir
         os.mkdir(prob_dir)
-        filechooser = self.builder.get_object('filechooser_probbasedir')
-        basedir = filechooser.get_filename()
+        
         model_iter = self.model.get_iter_first()
         for i in range(self.tp):
             # Copy input file
@@ -193,16 +232,21 @@ class AddDialog(gtk.Window):
         config = ConfigParser.RawConfigParser()
 
         config.add_section('main')
-        config.set('main', 'name', entry_probname.get_text())
-        config.set('main', 'title', entry_probtitle.get_text())
+        config.set('main', 'name', prob_name)
+        config.set('main', 'title', prob_title)
         config.add_section('test_point')
         config.set('test_point', 'test_point_count', self.tp)
-        # TODO
-        #config.set('test_point', 'time_limit_0', 'fun')
-        #config.set('test_point', 'mem_limit_0', 'Python')
 
-        with open(os.path.join(prob_dir, 'problem.conf'), 'wb') as configfile:
-            config.write(configfile)
+        model_iter = self.model.get_iter_first()
+        for i in range(self.tp):
+            time_limit = self.model.get_value(model_iter, COLUMN_TIMELIMIT)
+            mem_limit = self.model.get_value(model_iter, COLUMN_MEMLIMIT)
+            config.set('test_point', 'time_limit_' + str(i), time_limit)
+            config.set('test_point', 'mem_limit_' + str(i), mem_limit)
+            model_iter = self.model.iter_next(model_iter)
+
+        with open(os.path.join(prob_dir, 'problem.conf'), 'wb') as config_file:
+            config.write(config_file)
 
         self.destroy()
 

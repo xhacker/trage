@@ -2,6 +2,7 @@
 
 import gtk
 import gobject
+import os
 
 import gettext
 from gettext import gettext as _
@@ -9,6 +10,7 @@ gettext.textdomain('trage')
 
 from trage import (
     AddDialog)
+from trage.common.problem import Problem
 from trage.helpers import get_builder
 
 (
@@ -47,14 +49,16 @@ class ManageDialog(gtk.Window):
                             gobject.TYPE_STRING,
                             gobject.TYPE_STRING)
 
-        # TODO
-        # Sample
-        model.append(('1', 'plus', 'A + B Problem'))
-        model.append(('2', 'ccc10-1', 'CCC 2010 1'))
-        model.append(('3', 'apple', '陶陶摘苹果'))
+        # TODO: move duplicate codes to common/problem.py (get_prob_list)
+        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
+        files = os.listdir(prob_dir)
+        for directory in files:
+            if os.path.isdir(os.path.join(prob_dir, directory)):
+                prob = Problem('user', directory)
+                prob.load()
+                model.append( ( directory, prob.get_name(), prob.get_title() ) )
 
         treeview.set_model(model)
-
 
         column = gtk.TreeViewColumn(_('ID'), gtk.CellRendererText(), text = COLUMN_ID)
         treeview.append_column(column)
