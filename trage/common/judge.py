@@ -22,7 +22,7 @@ class Judge:
         config_file = os.path.join(self.prob_dir, 'problem.conf')
 
         import ConfigParser
-        config    = ConfigParser.RawConfigParser()
+        config = ConfigParser.RawConfigParser()
         if os.path.lexists(config_file) == False:
             return 1 # Wrong problem id
         try:

@@ -183,7 +183,7 @@
               <object class="GtkToolButton" id="toolbutton_quit">
                 <property name="visible">True</property>
                 <property name="is_important">True</property>
-                <property name="label" translatable="yes">&#x9000;&#x51FA;</property>
+                <property name="label" translatable="yes">Quit</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-quit</property>
                 <signal name="clicked" handler="quit"/>

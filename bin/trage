@@ -162,7 +162,7 @@ class JudgeThread(threading.Thread):
             self.vprint(_('Please choose a source file.\n'))
             return
 
-        # everything seems ok.
+        # Everything seems ok.
         self.vclear()
 
         from trage.common.judge import Judge

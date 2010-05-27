@@ -2,6 +2,8 @@
 
 import gtk
 import gobject
+import os
+import shutil
 
 import gettext
 from gettext import gettext as _
@@ -39,21 +41,20 @@ class AddDialog(gtk.Window):
         self.init_treeview()
 
         self.tp = 0
-        self.tp_max = 0
-        self.tp_widget_table = [[]]
         self.tp_more(None)
 
         # 使减少测试点按钮不可用
         button_less = self.builder.get_object('button_tpless')
         button_less.set_sensitive(False)
 
-    def update_stores(self):
-        # TODO
-        self.input_store.append(['Hello!']);
-        self.input_store.append(['Hey!']);
-        self.input_store.append(['Hi!']);
-        self.input_store.append(['Howdy!']);
-        #self.ans_store
+    def update_stores(self, widget = None):
+        self.file_store.clear()
+        filechooser = self.builder.get_object('filechooser_probbasedir')
+        basedir = filechooser.get_filename()
+        files = os.listdir(basedir)
+        for f in files:
+            if os.path.isfile(os.path.join(basedir, f)):
+                self.file_store.append([f])
 
     def cell_edited(self, cellrenderertext, path, new_val, column):
         iter = self.model.get_iter(path)
@@ -73,12 +74,6 @@ class AddDialog(gtk.Window):
                             gobject.TYPE_FLOAT,
                             gobject.TYPE_INT)
 
-        # TODO
-        # Sample
-        model.append((1, 'Hello!', 'A + B Problem', 0.5, 100))
-        model.append((2, 'ccc10-1', 'CCC 2010 1', 0.5, 100))
-        model.append((3, 'apple', '陶陶摘苹果', 0.5, 100))
-
         treeview.set_model(model)
 
         column = gtk.TreeViewColumn('', gtk.CellRendererText(), text = COLUMN_ID)
@@ -86,37 +81,45 @@ class AddDialog(gtk.Window):
 
         # Column Input
         cell_render = gtk.CellRendererCombo()
-        self.input_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.file_store = gtk.ListStore(gobject.TYPE_STRING)
         cell_render.set_property('editable', True)
-        cell_render.set_property('model', self.input_store)
+        cell_render.set_property('model', self.file_store)
         cell_render.set_property("text-column", 0)
         cell_render.set_property("has-entry", False)
 
-        cell_render.connect("edited", self.cell_edited, 1)
-        
+        cell_render.connect("edited", self.cell_edited, COLUMN_INFILE)
+
         column = gtk.TreeViewColumn(_('Input File'), cell_render, text = COLUMN_INFILE)
         treeview.append_column(column)
 
         # Column Ans
-        cell_render = gtk.CellRendererText()
+        cell_render = gtk.CellRendererCombo()
         cell_render.set_property('editable', True)
+        cell_render.set_property('model', self.file_store)
+        cell_render.set_property("text-column", 0)
+        cell_render.set_property("has-entry", False)
+
+        cell_render.connect("edited", self.cell_edited, COLUMN_ANSFILE)
+
         column = gtk.TreeViewColumn(_('Answer File'), cell_render, text = COLUMN_ANSFILE)
         treeview.append_column(column)
 
         # Column Time
-        adj = gtk.Adjustment(0.5, 0.5, 20, 0.1)
-        cell_render = gtk.CellRendererSpin()
-        cell_render.set_property('adjustment', adj)
+        cell_render = gtk.CellRendererText()
         cell_render.set_property('editable', True)
-        cell_render.set_property('digits', 1)
 
-        cell_render.connect("edited", self.cell_edited, 3)
-        
-        column = gtk.TreeViewColumn(_('Time Limit'), cell_render)
+        cell_render.connect("edited", self.cell_edited, COLUMN_TIMELIMIT)
+
+        column = gtk.TreeViewColumn(_('Time Limit'), cell_render, text = COLUMN_TIMELIMIT)
         treeview.append_column(column)
 
         # Column Mem
-        column = gtk.TreeViewColumn(_('Mem Limit'), gtk.CellRendererSpin())
+        cell_render = gtk.CellRendererText()
+        cell_render.set_property('editable', True)
+
+        cell_render.connect("edited", self.cell_edited, COLUMN_MEMLIMIT)
+
+        column = gtk.TreeViewColumn(_('Mem Limit'), cell_render, text = COLUMN_MEMLIMIT)
         treeview.append_column(column)
 
         self.model = model
@@ -133,48 +136,7 @@ class AddDialog(gtk.Window):
         self.tp += 1
 
         # Add row
-        '''if self.tp <= self.tp_max:
-            self.tp_widget_table[self.tp][LABEL].set_visible(True)
-            self.tp_widget_table[self.tp][INFILE].set_visible(True)
-            self.tp_widget_table[self.tp][ANSFILE].set_visible(True)
-            self.tp_widget_table[self.tp][TIMELIMIT].set_visible(True)
-            self.tp_widget_table[self.tp][MEMLIMIT].set_visible(True)
-        else:
-            self.tp_max = self.tp
-            table_tp = self.builder.get_object('table_tp')
-
-            tp_widget_row = []
-            # Add label
-            label = gtk.Label(self.tp)
-            label.show()
-            tp_widget_row.append(label)
-            table_tp.attach(label, LABEL, LABEL + 1, self.tp, self.tp + 1, xoptions=gtk.FILL)
-            # Add input file chooser
-            infile = gtk.FileChooserButton(_('Select Input File'))
-            infile.show()
-            tp_widget_row.append(infile)
-            table_tp.attach(infile, INFILE, INFILE + 1, self.tp, self.tp + 1, yoptions=0)
-            # Add anwser file chooser
-            ansfile = gtk.FileChooserButton(_('Select Answer File'))
-            ansfile.show()
-            tp_widget_row.append(ansfile)
-            table_tp.attach(ansfile, ANSFILE, ANSFILE + 1, self.tp, self.tp + 1, yoptions=0)
-            # Add time limit spin button
-            timelimit = gtk.SpinButton(adjustment = self.builder.get_object('adj_time'), digits = 1)
-            timelimit.set_range(0.5, 20.0)
-            timelimit.get_adjustment().set_step_increment(0.5)
-            timelimit.show()
-            tp_widget_row.append(timelimit)
-            table_tp.attach(timelimit, TIMELIMIT, TIMELIMIT + 1, self.tp, self.tp + 1, xoptions=gtk.FILL)
-            # Add mem limit spin button
-            memlimit = gtk.SpinButton(adjustment = self.builder.get_object('adj_mem'))
-            memlimit.set_range(2, 512)
-            memlimit.get_adjustment().set_step_increment(2)
-            memlimit.show()
-            tp_widget_row.append(memlimit)
-            table_tp.attach(memlimit, MEMLIMIT, MEMLIMIT + 1, self.tp, self.tp + 1, xoptions=gtk.FILL)
-
-            self.tp_widget_table.append(tp_widget_row)'''
+        self.model.append([self.tp, '', '', 0.5, 100])
 
     def tp_less(self, widget):
         '''减少一个测试点'''
@@ -182,11 +144,10 @@ class AddDialog(gtk.Window):
             return
 
         # Delete row
-        '''self.tp_widget_table[self.tp][LABEL].set_visible(False)
-        self.tp_widget_table[self.tp][INFILE].set_visible(False)
-        self.tp_widget_table[self.tp][ANSFILE].set_visible(False)
-        self.tp_widget_table[self.tp][TIMELIMIT].set_visible(False)
-        self.tp_widget_table[self.tp][MEMLIMIT].set_visible(False)'''
+        model_iter = self.model.get_iter_first()
+        while self.model.iter_next(model_iter) is not None:
+            model_iter = self.model.iter_next(model_iter)
+        self.model.remove(model_iter)
 
         self.tp -= 1
 
@@ -196,7 +157,54 @@ class AddDialog(gtk.Window):
             button_less.set_sensitive(False)
 
     def add(self, widget):
-        pass
+        # Check
+        entry_probtitle = self.builder.get_object('entry_probtitle')
+        entry_probname = self.builder.get_object('entry_probname')
+
+        # Get a new problem ID
+        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
+        for i in range(999999):
+            if not os.path.exists(os.path.join(prob_dir, str(i))):
+                break
+        prob_dir = os.path.join(prob_dir, str(i))
+
+        # Make problem dir
+        os.mkdir(prob_dir)
+        filechooser = self.builder.get_object('filechooser_probbasedir')
+        basedir = filechooser.get_filename()
+        model_iter = self.model.get_iter_first()
+        for i in range(self.tp):
+            # Copy input file
+            src = self.model.get_value(model_iter, COLUMN_INFILE)
+            src = os.path.join(basedir, src)
+            dst = os.path.join(prob_dir, str(i) + '.in')
+            shutil.copy(src, dst)
+
+            # Copy answer file
+            src = self.model.get_value(model_iter, COLUMN_ANSFILE)
+            src = os.path.join(basedir, src)
+            dst = os.path.join(prob_dir, str(i) + '.ans')
+            shutil.copy(src, dst)
+
+            model_iter = self.model.iter_next(model_iter)
+
+        # Write problem config file
+        import ConfigParser
+        config = ConfigParser.RawConfigParser()
+
+        config.add_section('main')
+        config.set('main', 'name', entry_probname.get_text())
+        config.set('main', 'title', entry_probtitle.get_text())
+        config.add_section('test_point')
+        config.set('test_point', 'test_point_count', self.tp)
+        # TODO
+        #config.set('test_point', 'time_limit_0', 'fun')
+        #config.set('test_point', 'mem_limit_0', 'Python')
+
+        with open(os.path.join(prob_dir, 'problem.conf'), 'wb') as configfile:
+            config.write(configfile)
+
+        self.destroy()
 
     def quit(self, widget):
         """quit - signal handler for closing the AddDialog"""
