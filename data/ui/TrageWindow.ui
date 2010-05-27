@@ -18,14 +18,14 @@
             <child>
               <object class="GtkMenuItem" id="menuitem1">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Main(_M)</property>
+                <property name="label" translatable="yes">_Main</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu1">
                     <property name="visible">True</property>
                     <child>
                       <object class="GtkImageMenuItem" id="menuitem_judge">
-                        <property name="label">_Judge</property>
+                        <property name="label" translatable="yes">_Judge</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="image">image1</property>
@@ -36,7 +36,7 @@
                     </child>
                     <child>
                       <object class="GtkImageMenuItem" id="menuitem_add">
-                        <property name="label">_Add Problem</property>
+                        <property name="label" translatable="yes">_Add Problem</property>
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="image">image2</property>
@@ -88,7 +88,7 @@
             <child>
               <object class="GtkMenuItem" id="menuitem4">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">Help(_H)</property>
+                <property name="label" translatable="yes">_Help</property>
                 <property name="use_underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu" id="menu3">
@@ -169,7 +169,7 @@
             <child>
               <object class="GtkToolButton" id="toolbutton3">
                 <property name="is_important">True</property>
-                <property name="label" translatable="yes">&#x9996;&#x9009;&#x9879;</property>
+                <property name="label" translatable="yes">Preference</property>
                 <property name="use_underline">True</property>
                 <property name="stock_id">gtk-preferences</property>
                 <signal name="clicked" handler="preference"/>

@@ -37,6 +37,7 @@ Penhu and others from
 Beijing Nation Day School
 also made some great
 contribution.</property>
+    <property name="translator_credits" translatable="yes">translator-credits</property>
     <property name="logo">../media/logo.png</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox1">

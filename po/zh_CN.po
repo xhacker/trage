@@ -1,0 +1,288 @@
+# Chinese Simplified translations for Trage.
+# Copyright (C) 2010 THE TRAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Trage package.
+# Xhacker <liu.dongyuan@gmail.com>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Trage M2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-05-27 11:00+0800\n"
+"PO-Revision-Date: 2010-05-27 11:00+0800\n"
+"Last-Translator: Xhacker <liu.dongyuan@gmail.com>\n"
+"Language-Team: zh_CN <>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: bin/trage:25
+msgid "Welcome to Trage!"
+msgstr "欢迎使用 Trage！"
+
+#: bin/trage:140 data/ui/TrageWindow.ui.h:3
+msgid "Judge"
+msgstr "评测"
+
+#: bin/trage:142
+msgid "Judging"
+msgstr "评测中"
+
+#: bin/trage:155
+msgid "Problem number should be a number.\n"
+msgstr "题目号应为一个数字。\n"
+
+#: bin/trage:162
+msgid "Please choose a source file.\n"
+msgstr "请选择源文件。\n"
+
+#: bin/trage:172
+msgid "== Load Problem ============\n"
+msgstr "== 载入题目 =================\n"
+
+#: bin/trage:175
+msgid "Wrong problem id.\n"
+msgstr "题目号有误。\n"
+
+#: bin/trage:178
+msgid "Problem config file error, please report the bug to the developers.\n"
+msgstr "题目配置文件出错，请向开发者报告问题。\n"
+
+#: bin/trage:184
+msgid "Problem config file error, please report the bug to the developers."
+msgstr "题目配置文件出错，请向开发者报告问题。"
+
+#: bin/trage:186
+#, python-format
+msgid "Problem: %s (Problem source: \"%s\", id: %s)\n"
+msgstr "题目：%s (题目源：\"%s\"，编号：%s)\n"
+
+#: bin/trage:188
+msgid "== Compile =================\n"
+msgstr "== 编译 =====================\n"
+
+#: bin/trage:189
+msgid "Compiling...\n"
+msgstr "编译中...\n"
+
+#: bin/trage:192
+msgid "Compile failed. Error:\n"
+msgstr "编译失败。错误：\n"
+
+#: bin/trage:195
+msgid "Done.\n"
+msgstr "完成。\n"
+
+#: bin/trage:197
+msgid "== Judge ===================\n"
+msgstr "== 评测 =====================\n"
+
+#: bin/trage:205
+msgid "Problem data file error.\n"
+msgstr "题目数据文件出错。\n"
+
+#: bin/trage:208
+#, python-format
+msgid "[ Test %2d ] [ %3s ]"
+msgstr "[ 测试点 %2d ][ %3s ]"
+
+#: bin/trage:210
+#, python-format
+msgid " [ Time: %.2fs/%.1fs ] [ Mem: %.2fM/%dM ]"
+msgstr " [ 时间：%.2fs/%.1fs ] [ 内存：%.2fM/%dM ]"
+
+#: bin/trage:216
+#, python-format
+msgid "[ Result: %2d/%2d ] Accepted.\n"
+msgstr "[ 结果：%2d/%2d ] 通过。\n"
+
+#: bin/trage:218
+#, python-format
+msgid "[ Result: %2d/%2d ] Not accepted.\n"
+msgstr "[ 结果：%2d/%2d ] 未通过。\n"
+
+#: data/ui/AboutDialog.ui.h:1
+msgid "Copyright (C) 2009-2010 Xhacker Liu"
+msgstr "Copyright (C) 2009-2010 Xhacker Liu"
+
+#: data/ui/AboutDialog.ui.h:2
+msgid ""
+"Trage - An open source judge app.\n"
+"Copyright (C) 2009-2010 Xhacker Liu\n"
+"\n"
+"This program is free software: you can redistribute it and/or modify\n"
+"it under the terms of the GNU General Public License as published by\n"
+"the Free Software Foundation, either version 3 of the License, or\n"
+"(at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program.  If not, see <http://www.gnu.org/licenses/>."
+msgstr ""
+"Trage - 一个开源的评测软件。\n"
+"Copyright (C) 2009-2010 Xhacker Liu\n"
+"\n"
+"This program is free software: you can redistribute it and/or modify\n"
+"it under the terms of the GNU General Public License as published by\n"
+"the Free Software Foundation, either version 3 of the License, or\n"
+"(at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n"
+"GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program.  If not, see <http://www.gnu.org/licenses/>."
+
+#: data/ui/AboutDialog.ui.h:17
+msgid ""
+"Trage = Train + Judge.\n"
+"An open source judge app."
+msgstr ""
+"Trage = Train + Judge.\n"
+"一个开源的评测软件。"
+
+#: data/ui/AboutDialog.ui.h:19
+msgid "Trage Website"
+msgstr "Trage 网站"
+
+#: data/ui/AboutDialog.ui.h:20
+msgid "translator-credits"
+msgstr "Xhacker Liu <liu.dongyuan@gmail.com>"
+
+#: data/ui/AddDialog.ui.h:1 data/ui/TrageWindow.ui.h:2
+msgid "Add Problem"
+msgstr "添加题目"
+
+#: data/ui/AddDialog.ui.h:2
+msgid "Less Test Point (DEL)"
+msgstr "减少测试点 (DEL)"
+
+#: data/ui/AddDialog.ui.h:3
+msgid "More Test Point (INS)"
+msgstr "增加测试点 (INS)"
+
+#: data/ui/AddDialog.ui.h:4
+msgid "Problem Base Directory"
+msgstr "题目根目录"
+
+#: data/ui/AddDialog.ui.h:5
+msgid "Problem Name"
+msgstr "题目名称"
+
+#: data/ui/AddDialog.ui.h:6
+msgid "Problem Title"
+msgstr "题目标题"
+
+#: data/ui/AddDialog.ui.h:7
+msgid "Select Problem Base Directory"
+msgstr "选择题目根目录"
+
+#: data/ui/AddDialog.ui.h:8
+msgid "Select the directory containing problem input and output files"
+msgstr "选择包含题目输入、输出文件的目录"
+
+#: data/ui/AddDialog.ui.h:9
+msgid "Trage - Add Problem"
+msgstr "Trage - 添加题目"
+
+#: data/ui/AddDialog.ui.h:10
+msgid "Usually an English word, for input and output files"
+msgstr "通常是一个英文单词，用于输入、输出文件"
+
+#: data/ui/ManageDialog.ui.h:1 data/ui/TrageWindow.ui.h:4
+msgid "Manage Problem"
+msgstr "管理题目"
+
+#: data/ui/ManageDialog.ui.h:2
+msgid "Trage - Manage Problem"
+msgstr "Trage - 管理题目"
+
+#: data/ui/TrageWindow.ui.h:1
+msgid "<b>Judge Result</b>"
+msgstr "<b>评测结果</b>"
+
+#: data/ui/TrageWindow.ui.h:5
+msgid "Preference"
+msgstr "首选项"
+
+#: data/ui/TrageWindow.ui.h:6
+msgid "Problem ID"
+msgstr "题目编号"
+
+#: data/ui/TrageWindow.ui.h:7
+msgid "Quit"
+msgstr "退出"
+
+#: data/ui/TrageWindow.ui.h:8
+msgid "Source File"
+msgstr "源文件"
+
+#: data/ui/TrageWindow.ui.h:9
+msgid "Trage"
+msgstr "Trage"
+
+#: data/ui/TrageWindow.ui.h:10
+msgid "_Add Problem"
+msgstr "添加题目(_A)"
+
+#: data/ui/TrageWindow.ui.h:11
+msgid "_Help"
+msgstr "帮助(_H)"
+
+#: data/ui/TrageWindow.ui.h:12
+msgid "_Judge"
+msgstr "评测(_J)"
+
+#: data/ui/TrageWindow.ui.h:13
+msgid "_Main"
+msgstr "主要(_M)"
+
+#: data/ui/TrageWindow.ui.h:14
+msgid "_Manage Problem"
+msgstr "管理题目(_M)"
+
+#: trage/AddDialog.py:92
+msgid "Input File"
+msgstr "输入文件"
+
+#: trage/AddDialog.py:104
+msgid "Answer File"
+msgstr "答案文件"
+
+#: trage/AddDialog.py:113
+msgid "Time Limit"
+msgstr "时间限制"
+
+#: trage/AddDialog.py:122
+msgid "Mem Limit"
+msgstr "内存限制"
+
+#: trage/ManageDialog.py:59
+msgid "ID"
+msgstr "编号"
+
+#: trage/ManageDialog.py:62
+msgid "Name"
+msgstr "名称"
+
+#: trage/ManageDialog.py:65
+msgid "Title"
+msgstr "标题"
+
+#: trage/common/judge.py:59
+msgid "Source file does not exist."
+msgstr "源文件不存在。"
+
+#: trage/common/judge.py:65
+msgid "An error has occured, please report the bug to the developers."
+msgstr "发生了一个错误，请向开发者报告问题。"
+
+#: trage/common/judge.py:75
+msgid "Sorry, we don't support your programming language currently."
+msgstr "对不起，我们暂时不支持您的程序语言。"
