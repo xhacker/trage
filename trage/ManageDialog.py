@@ -38,7 +38,6 @@ class ManageDialog(gtk.Window):
         self.builder = builder
         self.builder.connect_signals(self)
 
-        #code for other initialization actions
         self.init_treeview()
         self.button_delete = self.builder.get_object('button_delete')
 
@@ -58,7 +57,7 @@ class ManageDialog(gtk.Window):
     def init_treeview(self):
         self.treeview = self.builder.get_object('treeview_prob')
 
-        # create model
+        # Create model
         self.model = gtk.ListStore(
                             gobject.TYPE_STRING,
                             gobject.TYPE_STRING,
