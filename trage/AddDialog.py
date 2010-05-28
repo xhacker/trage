@@ -48,14 +48,14 @@ class AddDialog(gtk.Window):
         button_less = self.builder.get_object('button_tpless')
         button_less.set_sensitive(False)
 
-    def update_stores(self, widget = None):
-        self.file_store.clear()
+    def update_model_file(self, widget = None):
+        self.model_file.clear()
         filechooser = self.builder.get_object('filechooser_probbasedir')
         basedir = filechooser.get_filename()
         files = os.listdir(basedir)
         for f in files:
             if os.path.isfile(os.path.join(basedir, f)):
-                self.file_store.append([f])
+                self.model_file.append([f])
 
     def cell_edited(self, cellrenderertext, path, new_val, column):
         iter = self.model.get_iter(path)
@@ -82,9 +82,9 @@ class AddDialog(gtk.Window):
 
         # Column Input
         cell_render = gtk.CellRendererCombo()
-        self.file_store = gtk.ListStore(gobject.TYPE_STRING)
+        self.model_file = gtk.ListStore(gobject.TYPE_STRING)
         cell_render.set_property('editable', True)
-        cell_render.set_property('model', self.file_store)
+        cell_render.set_property('model', self.model_file)
         cell_render.set_property("text-column", 0)
         cell_render.set_property("has-entry", False)
 
@@ -96,7 +96,7 @@ class AddDialog(gtk.Window):
         # Column Ans
         cell_render = gtk.CellRendererCombo()
         cell_render.set_property('editable', True)
-        cell_render.set_property('model', self.file_store)
+        cell_render.set_property('model', self.model_file)
         cell_render.set_property("text-column", 0)
         cell_render.set_property("has-entry", False)
 
@@ -126,7 +126,7 @@ class AddDialog(gtk.Window):
         self.model = model
         self.treeview = treeview
 
-        self.update_stores()
+        self.update_model_file()
 
     def tp_more(self, widget):
         '''增加一个测试点'''
@@ -191,13 +191,13 @@ class AddDialog(gtk.Window):
             in_file = os.path.join(basedir, in_file)
             if not os.path.isfile(in_file):
                 self.alert(_("Test point %d's input file not exist. Please select a valid file.") % (i + 1))
-                self.update_stores()
+                self.update_model_file()
                 return
 
             ans_file = os.path.join(basedir, ans_file)
             if not os.path.isfile(ans_file):
                 self.alert(_("Test point %d's answer file not exist. Please select a valid file.") % (i + 1))
-                self.update_stores()
+                self.update_model_file()
                 return
 
         # Get a new problem ID

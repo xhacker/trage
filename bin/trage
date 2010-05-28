@@ -56,12 +56,12 @@ class TrageWindow(gtk.Window):
         t = JudgeThread(self.builder)
         t.start()
 
-    def add(self, widget, data=None):
+    def add(self, widget, data = None):
         """add - display the add box for Trage"""
         add = AddDialog.AddDialog()
         add.show()
 
-    def manage(self, widget, data=None):
+    def manage(self, widget, data = None):
         """manage - display the manage box for Trage"""
         manage = ManageDialog.ManageDialog()
         manage.show()
@@ -73,13 +73,13 @@ class TrageWindow(gtk.Window):
         #about.destroy()
         pass
 
-    def about(self, widget, data=None):
+    def about(self, widget, data = None):
         """about - display the about box for Trage"""
         about = AboutDialog.AboutDialog()
         response = about.run()
         about.destroy()
 
-    def preference(self, widget, data=None):
+    def preference(self, widget, data = None):
         """preference - display the preference window for Trage"""
         #prefs = PreferencesDialog.NewPreferencesDialog()
         #response = prefs.run()
@@ -89,11 +89,11 @@ class TrageWindow(gtk.Window):
         #prefs.destroy()
         pass
 
-    def quit(self, widget, data=None):
+    def quit(self, widget, data = None):
         """quit - signal handler for closing the TrageWindow"""
         self.destroy()
 
-    def on_destroy(self, widget, data=None):
+    def on_destroy(self, widget, data = None):
         """on_destroy - called when the TrageWindow is close"""
         #clean up code for saving application state should be added here
 

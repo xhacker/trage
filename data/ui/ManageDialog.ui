@@ -81,6 +81,7 @@
               <object class="GtkTreeView" id="treeview_prob">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <signal name="cursor_changed" handler="on_row_changed"/>
               </object>
             </child>
           </object>
@@ -93,12 +94,13 @@
             <property name="visible">True</property>
             <property name="border_width">10</property>
             <child>
-              <object class="GtkButton" id="button4">
+              <object class="GtkButton" id="button_remove">
                 <property name="label">gtk-remove</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
+                <signal name="clicked" handler="remove"/>
               </object>
               <packing>
                 <property name="expand">False</property>

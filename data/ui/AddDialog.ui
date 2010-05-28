@@ -142,7 +142,7 @@
                 <property name="visible">True</property>
                 <property name="action">select-folder</property>
                 <property name="title" translatable="yes">Select Problem Base Directory</property>
-                <signal name="selection_changed" handler="update_stores"/>
+                <signal name="selection_changed" handler="update_model_file"/>
               </object>
               <packing>
                 <property name="padding">5</property>

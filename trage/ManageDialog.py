@@ -3,6 +3,7 @@
 import gtk
 import gobject
 import os
+import shutil
 
 import gettext
 from gettext import gettext as _
@@ -39,40 +40,65 @@ class ManageDialog(gtk.Window):
 
         #code for other initialization actions
         self.init_treeview()
+        self.button_remove = self.builder.get_object('button_remove')
 
-    def init_treeview(self):
-        treeview = self.builder.get_object('treeview_prob')
-
-        # create model
-        model = gtk.ListStore(
-                            gobject.TYPE_STRING,
-                            gobject.TYPE_STRING,
-                            gobject.TYPE_STRING)
-
+    def update_model(self):
         # TODO: move duplicate codes to common/problem.py (get_prob_list)
+        self.model.clear()
         prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
         files = os.listdir(prob_dir)
         for directory in files:
             if os.path.isdir(os.path.join(prob_dir, directory)):
                 prob = Problem('user', directory)
                 prob.load()
-                model.append( ( directory, prob.get_name(), prob.get_title() ) )
+                self.model.append( ( directory, prob.get_name(), prob.get_title() ) )
 
-        treeview.set_model(model)
+    def init_treeview(self):
+        self.treeview = self.builder.get_object('treeview_prob')
+
+        # create model
+        self.model = gtk.ListStore(
+                            gobject.TYPE_STRING,
+                            gobject.TYPE_STRING,
+                            gobject.TYPE_STRING)
+
+        self.treeview.set_model(self.model)
 
         column = gtk.TreeViewColumn(_('ID'), gtk.CellRendererText(), text = COLUMN_ID)
-        treeview.append_column(column)
+        self.treeview.append_column(column)
 
         column = gtk.TreeViewColumn(_('Name'), gtk.CellRendererText(), text = COLUMN_NAME)
-        treeview.append_column(column)
+        self.treeview.append_column(column)
 
         column = gtk.TreeViewColumn(_('Title'), gtk.CellRendererText(), text = COLUMN_TITLE)
-        treeview.append_column(column)
+        self.treeview.append_column(column)
 
-    def add(self, widget, data=None):
+        self.update_model()
+
+    def add(self, widget, data = None):
         """add - display the add box for Trage"""
         add = AddDialog.AddDialog()
-        add.show()
+        add.run()
+        self.update_model()
+
+    def on_row_changed(self, widget, data = None):
+        self.button_remove.set_sensitive(1)
+        cursor = self.treeview.get_cursor()
+        path = cursor[0]
+        iter = self.model.get_iter(path)
+        self.selected_prob_iter = iter
+        self.selected_prob_id = self.model.get_value(iter, COLUMN_ID)
+
+    def remove(self, widget, data = None):
+        """remove - remove a problem"""
+        # Remove dir
+        self.button_remove.set_sensitive(0)
+        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user", str(self.selected_prob_id))
+        shutil.rmtree(prob_dir)
+
+        # Delete row
+        self.model.remove(self.selected_prob_iter)
+        
 
     def quit(self, widget):
         """quit - signal handler for closing the AddDialog"""
