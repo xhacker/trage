@@ -40,7 +40,9 @@ class ManageDialog(gtk.Window):
 
         #code for other initialization actions
         self.init_treeview()
-        self.button_remove = self.builder.get_object('button_remove')
+        self.button_delete = self.builder.get_object('button_delete')
+
+        self.button_delete.set_sensitive(0)
 
     def update_model(self):
         # TODO: move duplicate codes to common/problem.py (get_prob_list)
@@ -75,24 +77,22 @@ class ManageDialog(gtk.Window):
 
         self.update_model()
 
-    def add(self, widget, data = None):
-        """add - display the add box for Trage"""
-        add = AddDialog.AddDialog()
-        add.run()
+    def refresh(self, widget, data = None):
+        """refresh - refresh the problem list"""
         self.update_model()
 
     def on_row_changed(self, widget, data = None):
-        self.button_remove.set_sensitive(1)
+        self.button_delete.set_sensitive(1)
         cursor = self.treeview.get_cursor()
         path = cursor[0]
         iter = self.model.get_iter(path)
         self.selected_prob_iter = iter
         self.selected_prob_id = self.model.get_value(iter, COLUMN_ID)
 
-    def remove(self, widget, data = None):
-        """remove - remove a problem"""
-        # Remove dir
-        self.button_remove.set_sensitive(0)
+    def delete(self, widget, data = None):
+        """delete - delete a problem"""
+        # Delete dir
+        self.button_delete.set_sensitive(0)
         prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user", str(self.selected_prob_id))
         shutil.rmtree(prob_dir)
 
