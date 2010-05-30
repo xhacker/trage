@@ -3,7 +3,9 @@
 import gtk
 import gobject
 import os
+
 import shutil
+import string
 
 import gettext
 from gettext import gettext as _
@@ -48,13 +50,21 @@ class AddDialog(gtk.Window):
         button_less = self.builder.get_object('button_tpless')
         button_less.set_sensitive(False)
 
+    def get_last_iter(self, model):
+        iter = model.get_iter_first()
+        if iter:
+            while model.iter_next(iter) is not None:
+                iter = model.iter_next(iter)
+        return iter
+
     def update_model_file(self, widget = None):
         self.model_file.clear()
         filechooser = self.builder.get_object('filechooser_probbasedir')
-        basedir = filechooser.get_filename()
-        files = os.listdir(basedir)
+        base_dir = filechooser.get_filename()
+        files = os.listdir(base_dir)
+        files.sort()
         for f in files:
-            if os.path.isfile(os.path.join(basedir, f)):
+            if os.path.isfile(os.path.join(base_dir, f)):
                 self.model_file.append([f])
 
     def cell_edited(self, cellrenderertext, path, new_val, column):
@@ -136,8 +146,93 @@ class AddDialog(gtk.Window):
             button_less.set_sensitive(True)
         self.tp += 1
 
+        if self.tp == 1:
+            time_limit = 1.0
+            mem_limit = 32
+        else:
+            # Guess time limit and mem limit
+            iter = self.get_last_iter(self.model)
+            time_limit = self.model.get_value(iter, COLUMN_TIMELIMIT)
+            mem_limit = self.model.get_value(iter, COLUMN_MEMLIMIT)
+
+        # Guess input and output file
+        input_filename = ''
+        answer_filename = ''
+        if self.tp == 1:
+            pass
+        else:
+            if self.tp == 2:
+                # Analysis first test point's file names
+                self.input_pattern = ''
+                iter = self.model.get_iter_first()
+                input_filename_0 = self.model.get_value(iter, COLUMN_INFILE)
+
+                if string.find(input_filename_0, '00') >= 0:
+                    self.input_pattern = string.replace(input_filename_0, '00', '$NUM$', 1)
+                    self.input_pattern_len = 2
+                    self.input_pattern_start = 0
+                elif string.find(input_filename_0, '01') >= 0:
+                    self.input_pattern = string.replace(input_filename_0, '01', '$NUM$', 1)
+                    self.input_pattern_len = 2
+                    self.input_pattern_start = 1
+                elif string.find(input_filename_0, '0') >= 0:
+                    self.input_pattern = string.replace(input_filename_0, '0', '$NUM$', 1)
+                    self.input_pattern_len = 1
+                    self.input_pattern_start = 0
+                elif string.find(input_filename_0, '1') >= 0:
+                    self.input_pattern = string.replace(input_filename_0, '1', '$NUM$', 1)
+                    self.input_pattern_len = 1
+                    self.input_pattern_start = 1
+
+                self.answer_pattern = ''
+                iter = self.model.get_iter_first()
+                answer_filename_0 = self.model.get_value(iter, COLUMN_ANSFILE)
+
+                if string.find(answer_filename_0, '00') >= 0:
+                    self.answer_pattern = string.replace(answer_filename_0, '00', '$NUM$', 1)
+                    self.answer_pattern_len = 2
+                    self.answer_pattern_start = 0
+                elif string.find(answer_filename_0, '01') >= 0:
+                    self.answer_pattern = string.replace(answer_filename_0, '01', '$NUM$', 1)
+                    self.answer_pattern_len = 2
+                    self.answer_pattern_start = 1
+                elif string.find(answer_filename_0, '0') >= 0:
+                    self.answer_pattern = string.replace(answer_filename_0, '0', '$NUM$', 1)
+                    self.answer_pattern_len = 1
+                    self.answer_pattern_start = 0
+                elif string.find(answer_filename_0, '1') >= 0:
+                    self.answer_pattern = string.replace(answer_filename_0, '1', '$NUM$', 1)
+                    self.answer_pattern_len = 1
+                    self.answer_pattern_start = 1
+
+            if self.input_pattern:
+                if self.input_pattern_len == 1:
+                    num_str = str(self.tp + self.input_pattern_start - 1)
+                elif self.input_pattern_len == 2:
+                    num_str = '%02d' % (self.tp + self.input_pattern_start - 1)
+
+                input_filename = string.replace(self.input_pattern, '$NUM$', num_str, 1)
+                filechooser = self.builder.get_object('filechooser_probbasedir')
+                base_dir = filechooser.get_filename()
+                if not os.path.isfile(os.path.join(base_dir, input_filename)):
+                    input_filename = ''
+                    self.input_pattern = ''
+
+            if self.answer_pattern:
+                if self.answer_pattern_len == 1:
+                    num_str = str(self.tp + self.answer_pattern_start - 1)
+                elif self.answer_pattern_len == 2:
+                    num_str = '%02d' % (self.tp + self.answer_pattern_start - 1)
+
+                answer_filename = string.replace(self.answer_pattern, '$NUM$', num_str, 1)
+                filechooser = self.builder.get_object('filechooser_probbasedir')
+                base_dir = filechooser.get_filename()
+                if not os.path.isfile(os.path.join(base_dir, answer_filename)):
+                    answer_filename = ''
+                    self.answer_pattern = ''
+
         # Add row
-        self.model.append([self.tp, '', '', 0.5, 100])
+        self.model.append([self.tp, input_filename, answer_filename, time_limit, mem_limit])
 
     def tp_less(self, widget):
         '''减少一个测试点'''
@@ -145,10 +240,8 @@ class AddDialog(gtk.Window):
             return
 
         # Delete row
-        model_iter = self.model.get_iter_first()
-        while self.model.iter_next(model_iter) is not None:
-            model_iter = self.model.iter_next(model_iter)
-        self.model.remove(model_iter)
+        iter = self.get_last_iter(self.model)
+        self.model.remove(iter)
 
         self.tp -= 1
 
@@ -169,7 +262,7 @@ class AddDialog(gtk.Window):
         prob_name = entry_probname.get_text()
         prob_title = entry_probtitle.get_text()
         filechooser = self.builder.get_object('filechooser_probbasedir')
-        basedir = filechooser.get_filename()
+        base_dir = filechooser.get_filename()
 
         if not prob_title:
             self.alert(_('Please enter problem title.'))
@@ -179,26 +272,28 @@ class AddDialog(gtk.Window):
             self.alert(_('Please enter problem name.'))
             return
 
-        model_iter = self.model.get_iter_first()
+        iter = self.model.get_iter_first()
         for i in range(self.tp):
-            in_file = self.model.get_value(model_iter, COLUMN_INFILE)
-            ans_file = self.model.get_value(model_iter, COLUMN_ANSFILE)
+            in_file = self.model.get_value(iter, COLUMN_INFILE)
+            ans_file = self.model.get_value(iter, COLUMN_ANSFILE)
 
             if (not in_file) or (not ans_file):
-                self.alert(_('Every test point should have a input file and a output file.'))
+                self.alert(_('Every test point should have a input file and a answer file.'))
                 return
 
-            in_file = os.path.join(basedir, in_file)
+            in_file = os.path.join(base_dir, in_file)
             if not os.path.isfile(in_file):
                 self.alert(_("Test point %d's input file not exist. Please select a valid file.") % (i + 1))
                 self.update_model_file()
                 return
 
-            ans_file = os.path.join(basedir, ans_file)
+            ans_file = os.path.join(base_dir, ans_file)
             if not os.path.isfile(ans_file):
                 self.alert(_("Test point %d's answer file not exist. Please select a valid file.") % (i + 1))
                 self.update_model_file()
                 return
+
+            iter = self.model.iter_next(iter)
 
         # Get a new problem ID
         prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
@@ -211,21 +306,21 @@ class AddDialog(gtk.Window):
         # Make problem dir
         os.mkdir(prob_dir)
         
-        model_iter = self.model.get_iter_first()
+        iter = self.model.get_iter_first()
         for i in range(self.tp):
             # Copy input file
-            src = self.model.get_value(model_iter, COLUMN_INFILE)
-            src = os.path.join(basedir, src)
+            src = self.model.get_value(iter, COLUMN_INFILE)
+            src = os.path.join(base_dir, src)
             dst = os.path.join(prob_dir, str(i) + '.in')
             shutil.copy(src, dst)
 
             # Copy answer file
-            src = self.model.get_value(model_iter, COLUMN_ANSFILE)
-            src = os.path.join(basedir, src)
+            src = self.model.get_value(iter, COLUMN_ANSFILE)
+            src = os.path.join(base_dir, src)
             dst = os.path.join(prob_dir, str(i) + '.ans')
             shutil.copy(src, dst)
 
-            model_iter = self.model.iter_next(model_iter)
+            iter = self.model.iter_next(iter)
 
         # Write problem config file
         import ConfigParser
@@ -237,13 +332,13 @@ class AddDialog(gtk.Window):
         config.add_section('test_point')
         config.set('test_point', 'test_point_count', self.tp)
 
-        model_iter = self.model.get_iter_first()
+        iter = self.model.get_iter_first()
         for i in range(self.tp):
-            time_limit = self.model.get_value(model_iter, COLUMN_TIMELIMIT)
-            mem_limit = self.model.get_value(model_iter, COLUMN_MEMLIMIT)
+            time_limit = self.model.get_value(iter, COLUMN_TIMELIMIT)
+            mem_limit = self.model.get_value(iter, COLUMN_MEMLIMIT)
             config.set('test_point', 'time_limit_' + str(i), time_limit)
             config.set('test_point', 'mem_limit_' + str(i), mem_limit)
-            model_iter = self.model.iter_next(model_iter)
+            iter = self.model.iter_next(iter)
 
         with open(os.path.join(prob_dir, 'problem.conf'), 'wb') as config_file:
             config.write(config_file)

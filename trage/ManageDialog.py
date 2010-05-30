@@ -48,6 +48,7 @@ class ManageDialog(gtk.Window):
         self.model.clear()
         prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
         files = os.listdir(prob_dir)
+        files.sort()
         for directory in files:
             if os.path.isdir(os.path.join(prob_dir, directory)):
                 prob = Problem('user', directory)
@@ -81,12 +82,12 @@ class ManageDialog(gtk.Window):
         self.update_model()
 
     def on_row_changed(self, widget, data = None):
-        self.button_delete.set_sensitive(1)
-        cursor = self.treeview.get_cursor()
-        path = cursor[0]
-        iter = self.model.get_iter(path)
-        self.selected_prob_iter = iter
-        self.selected_prob_id = self.model.get_value(iter, COLUMN_ID)
+        selection = self.treeview.get_selection()
+        iter = selection.get_selected()[1]
+        if iter:
+            self.button_delete.set_sensitive(1)
+            self.selected_prob_iter = iter
+            self.selected_prob_id = self.model.get_value(iter, COLUMN_ID)
 
     def delete(self, widget, data = None):
         """delete - delete a problem"""

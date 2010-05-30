@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Trage M2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-27 11:00+0800\n"
-"PO-Revision-Date: 2010-05-27 11:00+0800\n"
+"POT-Creation-Date: 2010-05-29 13:47+0800\n"
+"PO-Revision-Date: 2010-05-29 13:48+0800\n"
 "Last-Translator: Xhacker <liu.dongyuan@gmail.com>\n"
 "Language-Team: zh_CN <>\n"
 "MIME-Version: 1.0\n"
@@ -16,87 +16,87 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: bin/trage:25
+#: bin/trage:30
 msgid "Welcome to Trage!"
 msgstr "欢迎使用 Trage！"
 
-#: bin/trage:140 data/ui/TrageWindow.ui.h:3
+#: bin/trage:143 data/ui/TrageWindow.ui.h:3
 msgid "Judge"
 msgstr "评测"
 
-#: bin/trage:142
+#: bin/trage:145
 msgid "Judging"
 msgstr "评测中"
 
-#: bin/trage:155
+#: bin/trage:158
 msgid "Problem number should be a number.\n"
 msgstr "题目号应为一个数字。\n"
 
-#: bin/trage:162
+#: bin/trage:165
 msgid "Please choose a source file.\n"
 msgstr "请选择源文件。\n"
 
-#: bin/trage:172
+#: bin/trage:175
 msgid "== Load Problem ============\n"
 msgstr "== 载入题目 =================\n"
 
-#: bin/trage:175
+#: bin/trage:178
 msgid "Wrong problem id.\n"
 msgstr "题目号有误。\n"
 
-#: bin/trage:178
+#: bin/trage:181
 msgid "Problem config file error, please report the bug to the developers.\n"
 msgstr "题目配置文件出错，请向开发者报告问题。\n"
 
-#: bin/trage:184
+#: bin/trage:187
 msgid "Problem config file error, please report the bug to the developers."
 msgstr "题目配置文件出错，请向开发者报告问题。"
 
-#: bin/trage:186
+#: bin/trage:189
 #, python-format
 msgid "Problem: %s (Problem source: \"%s\", id: %s)\n"
 msgstr "题目：%s (题目源：\"%s\"，编号：%s)\n"
 
-#: bin/trage:188
+#: bin/trage:191
 msgid "== Compile =================\n"
 msgstr "== 编译 =====================\n"
 
-#: bin/trage:189
+#: bin/trage:192
 msgid "Compiling...\n"
 msgstr "编译中...\n"
 
-#: bin/trage:192
+#: bin/trage:195
 msgid "Compile failed. Error:\n"
 msgstr "编译失败。错误：\n"
 
-#: bin/trage:195
+#: bin/trage:198
 msgid "Done.\n"
 msgstr "完成。\n"
 
-#: bin/trage:197
+#: bin/trage:200
 msgid "== Judge ===================\n"
 msgstr "== 评测 =====================\n"
 
-#: bin/trage:205
+#: bin/trage:208
 msgid "Problem data file error.\n"
 msgstr "题目数据文件出错。\n"
 
-#: bin/trage:208
+#: bin/trage:211
 #, python-format
 msgid "[ Test %2d ] [ %3s ]"
 msgstr "[ 测试点 %2d ][ %3s ]"
 
-#: bin/trage:210
+#: bin/trage:213
 #, python-format
 msgid " [ Time: %.2fs/%.1fs ] [ Mem: %.2fM/%dM ]"
 msgstr " [ 时间：%.2fs/%.1fs ] [ 内存：%.2fM/%dM ]"
 
-#: bin/trage:216
+#: bin/trage:219
 #, python-format
 msgid "[ Result: %2d/%2d ] Accepted.\n"
 msgstr "[ 结果：%2d/%2d ] 通过。\n"
 
-#: bin/trage:218
+#: bin/trage:221
 #, python-format
 msgid "[ Result: %2d/%2d ] Not accepted.\n"
 msgstr "[ 结果：%2d/%2d ] 未通过。\n"
@@ -152,6 +152,20 @@ msgid "Trage Website"
 msgstr "Trage 网站"
 
 #: data/ui/AboutDialog.ui.h:20
+msgid ""
+"Xhacker Liu <liu.dongyuan@gmail.com>\n"
+"\n"
+"Penhu and others from\n"
+"Beijing Nation Day School\n"
+"also made some great\n"
+"contribution."
+msgstr ""
+"Xhacker Liu <liu.dongyuan@gmail.com>\n"
+"\n"
+"北京市十一学校的 Penhu 等\n"
+"也做出了巨大的贡献。"
+
+#: data/ui/AboutDialog.ui.h:26
 msgid "translator-credits"
 msgstr "Xhacker Liu <liu.dongyuan@gmail.com>"
 
@@ -247,31 +261,53 @@ msgstr "主要(_M)"
 msgid "_Manage Problem"
 msgstr "管理题目(_M)"
 
-#: trage/AddDialog.py:92
+#: trage/AddDialog.py:103
 msgid "Input File"
 msgstr "输入文件"
 
-#: trage/AddDialog.py:104
+#: trage/AddDialog.py:115
 msgid "Answer File"
 msgstr "答案文件"
 
-#: trage/AddDialog.py:113
+#: trage/AddDialog.py:124
 msgid "Time Limit"
 msgstr "时间限制"
 
-#: trage/AddDialog.py:122
+#: trage/AddDialog.py:133
 msgid "Mem Limit"
 msgstr "内存限制"
 
-#: trage/ManageDialog.py:59
+#: trage/AddDialog.py:234
+msgid "Please enter problem title."
+msgstr "请输入题目标题。"
+
+#: trage/AddDialog.py:238
+msgid "Please enter problem name."
+msgstr "请输入题目名。"
+
+#: trage/AddDialog.py:247
+msgid "Every test point should have a input file and a answer file."
+msgstr "每个测试点都应该有输入文件和答案文件。"
+
+#: trage/AddDialog.py:252
+#, python-format
+msgid "Test point %d's input file not exist. Please select a valid file."
+msgstr "测试点 %d 的输入文件不存在。请选择一个存在的文件。"
+
+#: trage/AddDialog.py:258
+#, python-format
+msgid "Test point %d's answer file not exist. Please select a valid file."
+msgstr "测试点 %d 的答案文件不存在。请选择一个存在的文件。"
+
+#: trage/ManageDialog.py:69
 msgid "ID"
 msgstr "编号"
 
-#: trage/ManageDialog.py:62
+#: trage/ManageDialog.py:72
 msgid "Name"
 msgstr "名称"
 
-#: trage/ManageDialog.py:65
+#: trage/ManageDialog.py:75
 msgid "Title"
 msgstr "标题"
 

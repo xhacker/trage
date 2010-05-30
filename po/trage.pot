@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-05-27 11:00+0800\n"
+"POT-Creation-Date: 2010-05-29 13:47+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,87 +16,87 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: bin/trage:25
+#: bin/trage:30
 msgid "Welcome to Trage!"
 msgstr ""
 
-#: bin/trage:140 data/ui/TrageWindow.ui.h:3
+#: bin/trage:143 data/ui/TrageWindow.ui.h:3
 msgid "Judge"
 msgstr ""
 
-#: bin/trage:142
+#: bin/trage:145
 msgid "Judging"
 msgstr ""
 
-#: bin/trage:155
+#: bin/trage:158
 msgid "Problem number should be a number.\n"
 msgstr ""
 
-#: bin/trage:162
+#: bin/trage:165
 msgid "Please choose a source file.\n"
 msgstr ""
 
-#: bin/trage:172
+#: bin/trage:175
 msgid "== Load Problem ============\n"
 msgstr ""
 
-#: bin/trage:175
+#: bin/trage:178
 msgid "Wrong problem id.\n"
 msgstr ""
 
-#: bin/trage:178
+#: bin/trage:181
 msgid "Problem config file error, please report the bug to the developers.\n"
 msgstr ""
 
-#: bin/trage:184
+#: bin/trage:187
 msgid "Problem config file error, please report the bug to the developers."
 msgstr ""
 
-#: bin/trage:186
+#: bin/trage:189
 #, python-format
 msgid "Problem: %s (Problem source: \"%s\", id: %s)\n"
 msgstr ""
 
-#: bin/trage:188
+#: bin/trage:191
 msgid "== Compile =================\n"
 msgstr ""
 
-#: bin/trage:189
+#: bin/trage:192
 msgid "Compiling...\n"
 msgstr ""
 
-#: bin/trage:192
+#: bin/trage:195
 msgid "Compile failed. Error:\n"
 msgstr ""
 
-#: bin/trage:195
+#: bin/trage:198
 msgid "Done.\n"
 msgstr ""
 
-#: bin/trage:197
+#: bin/trage:200
 msgid "== Judge ===================\n"
 msgstr ""
 
-#: bin/trage:205
+#: bin/trage:208
 msgid "Problem data file error.\n"
 msgstr ""
 
-#: bin/trage:208
+#: bin/trage:211
 #, python-format
 msgid "[ Test %2d ] [ %3s ]"
 msgstr ""
 
-#: bin/trage:210
+#: bin/trage:213
 #, python-format
 msgid " [ Time: %.2fs/%.1fs ] [ Mem: %.2fM/%dM ]"
 msgstr ""
 
-#: bin/trage:216
+#: bin/trage:219
 #, python-format
 msgid "[ Result: %2d/%2d ] Accepted.\n"
 msgstr ""
 
-#: bin/trage:218
+#: bin/trage:221
 #, python-format
 msgid "[ Result: %2d/%2d ] Not accepted.\n"
 msgstr ""
@@ -135,6 +135,16 @@ msgid "Trage Website"
 msgstr ""
 
 #: data/ui/AboutDialog.ui.h:20
+msgid ""
+"Xhacker Liu <liu.dongyuan@gmail.com>\n"
+"\n"
+"Penhu and others from\n"
+"Beijing Nation Day School\n"
+"also made some great\n"
+"contribution."
+msgstr ""
+
+#: data/ui/AboutDialog.ui.h:26
 msgid "translator-credits"
 msgstr ""
 
@@ -230,31 +240,53 @@ msgstr ""
 msgid "_Manage Problem"
 msgstr ""
 
-#: trage/AddDialog.py:92
+#: trage/AddDialog.py:103
 msgid "Input File"
 msgstr ""
 
-#: trage/AddDialog.py:104
+#: trage/AddDialog.py:115
 msgid "Answer File"
 msgstr ""
 
-#: trage/AddDialog.py:113
+#: trage/AddDialog.py:124
 msgid "Time Limit"
 msgstr ""
 
-#: trage/AddDialog.py:122
+#: trage/AddDialog.py:133
 msgid "Mem Limit"
 msgstr ""
 
-#: trage/ManageDialog.py:59
+#: trage/AddDialog.py:234
+msgid "Please enter problem title."
+msgstr ""
+
+#: trage/AddDialog.py:238
+msgid "Please enter problem name."
+msgstr ""
+
+#: trage/AddDialog.py:247
+msgid "Every test point should have a input file and a answer file."
+msgstr ""
+
+#: trage/AddDialog.py:252
+#, python-format
+msgid "Test point %d's input file not exist. Please select a valid file."
+msgstr ""
+
+#: trage/AddDialog.py:258
+#, python-format
+msgid "Test point %d's answer file not exist. Please select a valid file."
+msgstr ""
+
+#: trage/ManageDialog.py:69
 msgid "ID"
 msgstr ""
 
-#: trage/ManageDialog.py:62
+#: trage/ManageDialog.py:72
 msgid "Name"
 msgstr ""
 
-#: trage/ManageDialog.py:65
+#: trage/ManageDialog.py:75
 msgid "Title"
 msgstr ""
 
