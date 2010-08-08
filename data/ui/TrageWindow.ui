@@ -78,8 +78,8 @@
                         <property name="visible">True</property>
                         <property name="use_underline">True</property>
                         <property name="use_stock">True</property>
-                        <accelerator key="q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                         <accelerator key="w" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+                        <accelerator key="q" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                         <signal name="activate" handler="quit"/>
                       </object>
                     </child>
@@ -130,6 +130,7 @@
             <child>
               <object class="GtkToolButton" id="toolbutton_judge">
                 <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Judge</property>
                 <property name="is_important">True</property>
                 <property name="label" translatable="yes">Judge</property>
                 <property name="icon_name">preferences-system</property>
@@ -143,6 +144,7 @@
             <child>
               <object class="GtkToolButton" id="toolbutton1">
                 <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Add Problem</property>
                 <property name="is_important">True</property>
                 <property name="label" translatable="yes">Add Problem</property>
                 <property name="use_underline">True</property>
@@ -157,6 +159,7 @@
             <child>
               <object class="GtkToolButton" id="toolbutton2">
                 <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Manage Problem</property>
                 <property name="is_important">True</property>
                 <property name="label" translatable="yes">Manage Problem</property>
                 <property name="use_underline">True</property>
@@ -170,6 +173,7 @@
             </child>
             <child>
               <object class="GtkToolButton" id="toolbutton3">
+                <property name="tooltip_text" translatable="yes">Preference</property>
                 <property name="is_important">True</property>
                 <property name="label" translatable="yes">Preference</property>
                 <property name="use_underline">True</property>
@@ -184,6 +188,7 @@
             <child>
               <object class="GtkToolButton" id="toolbutton_quit">
                 <property name="visible">True</property>
+                <property name="tooltip_text" translatable="yes">Quit</property>
                 <property name="is_important">True</property>
                 <property name="label" translatable="yes">Quit</property>
                 <property name="use_underline">True</property>
@@ -315,6 +320,6 @@
   </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
-    <property name="stock">gtk-missing-image</property>
+    <property name="icon_name">applications-other</property>
   </object>
 </interface>
