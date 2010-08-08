@@ -12,9 +12,11 @@
     <property name="program_name">Trage</property>
     <property name="version">Dawn(M1).0 pre</property>
     <property name="copyright" translatable="yes">Copyright (C) 2009-2010 Xhacker Liu</property>
-    <property name="comments" translatable="yes">Trage = Train + Judge.
+    <property name="comments" translatable="yes">                              /* Trage = Train + Judge. */                              
 Trage + dy = Tragedy.
-An open source judge app.</property>
+
+Judge your ugly code.
+</property>
     <property name="website">http://www.shiyihcc.com/trage</property>
     <property name="website_label" translatable="yes">Trage Website</property>
     <property name="license" translatable="yes">Trage - An open source judge app.
