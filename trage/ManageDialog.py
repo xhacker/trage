@@ -44,7 +44,7 @@ class ManageDialog(gtk.Window):
         self.button_delete.set_sensitive(0)
 
     def update_model(self):
-        # TODO: move duplicate codes to common/problem.py (get_prob_list)
+        # TODO: move duplicated codes to common/problem.py (get_prob_list)
         self.model.clear()
         prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
         files = os.listdir(prob_dir)
@@ -53,7 +53,7 @@ class ManageDialog(gtk.Window):
             if os.path.isdir(os.path.join(prob_dir, directory)):
                 prob = Problem('user', directory)
                 prob.load()
-                self.model.append( ( directory, prob.get_name(), prob.get_title() ) )
+                self.model.append( [directory, prob.get_name(), prob.get_title()] )
 
     def init_treeview(self):
         self.treeview = self.builder.get_object('treeview_prob')

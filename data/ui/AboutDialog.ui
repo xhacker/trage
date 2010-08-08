@@ -13,6 +13,7 @@
     <property name="version">Dawn(M1).0 pre</property>
     <property name="copyright" translatable="yes">Copyright (C) 2009-2010 Xhacker Liu</property>
     <property name="comments" translatable="yes">Trage = Train + Judge.
+Trage + dy = Tragedy.
 An open source judge app.</property>
     <property name="website">http://www.shiyihcc.com/trage</property>
     <property name="website_label" translatable="yes">Trage Website</property>
@@ -31,7 +32,7 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</property>
-    <property name="authors" translatable="yes">Xhacker Liu &lt;liu.dongyuan@gmail.com&gt;
+    <property name="authors">Xhacker Liu &lt;liu.dongyuan@gmail.com&gt;
 
 Penhu and others from
 Beijing Nation Day School

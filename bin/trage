@@ -31,6 +31,7 @@ print _('Welcome to Trage!')
 
 from trage import (
     AboutDialog, AddDialog, ManageDialog)
+from trage.common.problem import Problem
 from trage.helpers import get_builder
 
 class TrageWindow(gtk.Window):
@@ -55,8 +56,48 @@ class TrageWindow(gtk.Window):
         #dlg = PreferencesDialog.NewPreferencesDialog()
         #self.preferences = dlg.get_preferences()
 
+        # create model
+        self.model_prob = gtk.ListStore(gobject.TYPE_STRING)
+        combobox_prob = self.builder.get_object('combobox_prob')
+        cell = gtk.CellRendererText()
+        combobox_prob.pack_start(cell, True)
+        combobox_prob.add_attribute(cell, 'text', 0)
+        combobox_prob.set_model(self.model_prob)
+        self.update_model_prob()
+
+    def update_model_prob(self, widget = None):
+        # TODO: move duplicated codes to common/problem.py (get_prob_list)
+        self.model_prob.clear()
+        self.list_probid = []
+        files = os.listdir(prob_dir)
+        files.sort()
+        for directory in files:
+            if os.path.isdir(os.path.join(prob_dir, directory)):
+                prob = Problem('user', directory)
+                prob.load()
+                self.model_prob.append([directory + ' - ' + prob.get_name() + ' - ' + prob.get_title()])
+                self.list_probid.append(directory)
+
+    def alert(self, text):
+        alert_dialog = gtk.MessageDialog(buttons = gtk.BUTTONS_OK, message_format = text)
+        result = alert_dialog.run()
+        alert_dialog.destroy()
+
     def judge(self, widget):
-        t = JudgeThread(self.builder)
+        combobox_prob = self.builder.get_object('combobox_prob')
+        if combobox_prob.get_active() == -1:
+            # no problem
+            self.alert(_('Please select a problem.'))
+            return
+        prob_id = self.list_probid[combobox_prob.get_active()]
+
+        filechooser_source = self.builder.get_object('filechooser_source')
+        source_file = filechooser_source.get_filename()
+        if source_file == None:
+            self.alert(_('Please choose a source file.'))
+            return
+
+        t = JudgeThread(self.builder, prob_id, source_file)
         t.start()
 
     def add(self, widget, data = None):
@@ -116,9 +157,11 @@ def threadlock(f):
     return wrapper
 
 class JudgeThread(threading.Thread):
-    def __init__(self, builder):
+    def __init__(self, builder, prob_id, source_file):
         super(JudgeThread, self).__init__()
         self.builder = builder
+        self.prob_id = prob_id
+        self.source_file = source_file
         self.result_view = self.builder.get_object('result_view')
         self.result_view.modify_font( pango.FontDescription('Monospace') )
 
@@ -151,26 +194,11 @@ class JudgeThread(threading.Thread):
         """judge - judge current problem"""
 
         self.set_judge_clickable(False)
-
-        entry_probid = self.builder.get_object('entry_probid')
-        if entry_probid.get_text().isdigit() == False:
-            self.vclear()
-            self.vprint(_('Problem number should be a number.\n'))
-            return
-        prob_id = entry_probid.get_text()
-        filechooser_source = self.builder.get_object('filechooser_source')
-        source_file = filechooser_source.get_filename()
-        if source_file == None:
-            self.vclear()
-            self.vprint(_('Please choose a source file.\n'))
-            return
-
-        # Everything seems ok.
         self.vclear()
 
         from trage.common.judge import Judge
         prob_source = 'user'
-        judge = Judge(prob_source, prob_id, source_file)
+        judge = Judge(prob_source, self.prob_id, self.source_file)
 
         self.vprint(_('== Load Problem ============\n'))
         load_err = judge.load()
@@ -182,11 +210,11 @@ class JudgeThread(threading.Thread):
             return
 
         from trage.common.problem import Problem
-        prob = Problem(prob_source, prob_id)
+        prob = Problem(prob_source, self.prob_id)
         if prob.load():
             self.vprint(_('Problem config file error, please report the bug to the developers.'))
             return
-        self.vprint(_('Problem: %s (Problem source: "%s", id: %s)\n') % (prob.get_name(), prob_source, prob_id))
+        self.vprint(_('Problem: %s (Problem source: "%s", id: %s)\n') % (prob.get_name(), prob_source, self.prob_id))
 
         self.vprint(_('== Compile =================\n'))
         self.vprint(_('Compiling...\n'))
