@@ -1,0 +1,8 @@
+[Desktop Entry]
+_Name=Trage
+_Comment=Judge your ugly code.
+Categories=GNOME;GTK;Development;
+Exec=trage
+Icon=trage
+Terminal=false
+Type=Application

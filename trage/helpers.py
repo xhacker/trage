@@ -6,7 +6,7 @@
 import os
 import gtk
 
-from trage.config import get_data_file
+from trage.trageconfig import get_data_file
 
 import gettext
 from gettext import gettext as _
