@@ -98,7 +98,6 @@ class ManageDialog(gtk.Window):
 
         # Delete row
         self.model.remove(self.selected_prob_iter)
-        
 
     def quit(self, widget):
         """quit - signal handler for closing the AddDialog"""

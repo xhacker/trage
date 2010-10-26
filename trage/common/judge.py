@@ -66,9 +66,9 @@ class Judge:
 
         # Compile command
         if self.lang == "c":
-            compile_command = 'gcc -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
+            compile_command = 'gcc -lm -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
         elif self.lang == "cpp":
-            compile_command = 'g++ -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
+            compile_command = 'g++ -lm -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
         elif self.lang == "pas":
             compile_command = 'fpc -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
         else:

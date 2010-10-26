@@ -18,11 +18,6 @@ if (os.path.exists(os.path.join(PROJECT_ROOT_DIRECTORY, 'trage'))
     sys.path.insert(0, PROJECT_ROOT_DIRECTORY)
     os.putenv('PYTHONPATH', PROJECT_ROOT_DIRECTORY) # for subprocesses
 
-# If config files not exist, create them.
-prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
-if not os.path.exists(prob_dir):
-    os.makedirs(prob_dir)
-
 import pango
 import gobject
 import threading
@@ -31,8 +26,12 @@ print _('Welcome to Trage!')
 
 from trage import (
     AboutDialog, AddDialog, ManageDialog)
-from trage.common.problem import Problem
+from trage.common.problem import *
 from trage.helpers import get_builder
+
+# If config files not exist, create them.
+if not os.path.exists(prob_root_dir):
+    os.makedirs(prob_root_dir)
 
 class TrageWindow(gtk.Window):
     __gtype_name__ = "TrageWindow"
@@ -66,17 +65,12 @@ class TrageWindow(gtk.Window):
         self.update_model_prob()
 
     def update_model_prob(self, widget = None):
-        # TODO: move duplicated codes to common/problem.py (get_prob_list)
         self.model_prob.clear()
         self.list_probid = []
-        files = os.listdir(prob_dir)
-        files.sort()
-        for directory in files:
-            if os.path.isdir(os.path.join(prob_dir, directory)):
-                prob = Problem('user', directory)
-                prob.load()
-                self.model_prob.append([directory + ' - ' + prob.get_name() + ' - ' + prob.get_title()])
-                self.list_probid.append(directory)
+        problist = get_problist()
+        for prob in problist:
+            self.model_prob.append([prob['id'] + ' - ' + prob['name'] + ' - ' + prob['title']])
+            self.list_probid.append(prob['id'])
 
     def alert(self, text):
         alert_dialog = gtk.MessageDialog(buttons = gtk.BUTTONS_OK, message_format = text)
@@ -86,7 +80,6 @@ class TrageWindow(gtk.Window):
     def judge(self, widget):
         combobox_prob = self.builder.get_object('combobox_prob')
         if combobox_prob.get_active() == -1:
-            # no problem
             self.alert(_('Please select a problem.'))
             return
         prob_id = self.list_probid[combobox_prob.get_active()]
@@ -108,6 +101,7 @@ class TrageWindow(gtk.Window):
     def manage(self, widget, data = None):
         """manage - display the manage box for Trage"""
         manage = ManageDialog.ManageDialog()
+        manage.set_modal(True);
         manage.show()
 
     def help(self, widget):
@@ -148,6 +142,7 @@ def threadlock(f):
     @wraps(f)
     def wrapper(*args, **kwds):
         gtk.gdk.threads_enter()
+        #ret = f(*args, **kwds)
         try:
             ret = f(*args, **kwds)
         except:
