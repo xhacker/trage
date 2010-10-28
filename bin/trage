@@ -142,11 +142,7 @@ def threadlock(f):
     @wraps(f)
     def wrapper(*args, **kwds):
         gtk.gdk.threads_enter()
-        #ret = f(*args, **kwds)
-        try:
-            ret = f(*args, **kwds)
-        except:
-            print 'Thread error!'
+        ret = f(*args, **kwds)
         gtk.gdk.threads_leave()
         return ret
     return wrapper

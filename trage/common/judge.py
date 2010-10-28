@@ -7,6 +7,7 @@ gettext.textdomain('trage')
 
 import os
 import time
+import subprocess
 tmp_dir = '/tmp/'
 
 class Judge:
@@ -65,12 +66,13 @@ class Judge:
             return _('An error has occured, please report the bug to the developers.')
 
         # Compile command
+        self.tmp_name = str(time.time())
         if self.lang == "c":
-            compile_command = 'gcc -lm -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
+            compile_command = 'gcc -lm -o "%s" "%s"' % (os.path.join(tmp_dir, self.tmp_name), os.path.join(tmp_dir, self.name + "." + self.lang))
         elif self.lang == "cpp":
-            compile_command = 'g++ -lm -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
+            compile_command = 'g++ -lm -o "%s" "%s"' % (os.path.join(tmp_dir, self.tmp_name), os.path.join(tmp_dir, self.name + "." + self.lang))
         elif self.lang == "pas":
-            compile_command = 'fpc -o "%s" "%s"' % (os.path.join(tmp_dir, self.name), os.path.join(tmp_dir, self.name + "." + self.lang))
+            compile_command = 'fpc -o "%s" "%s"' % (os.path.join(tmp_dir, self.tmp_name), os.path.join(tmp_dir, self.name + "." + self.lang))
         else:
             return _('Sorry, we don\'t support your programming language currently.')
 
@@ -95,7 +97,7 @@ class Judge:
         self.tpoint_current += 1
         self.clean(exe = False)
 
-        in_file  = os.path.join(self.prob_dir, str(tpoint) + ".in")
+        in_file = os.path.join(self.prob_dir, str(tpoint) + ".in")
         out_file = os.path.join(tmp_dir, self.name + ".out")
         ans_file = os.path.join(self.prob_dir, str(tpoint) + ".ans")
 
@@ -107,15 +109,12 @@ class Judge:
         except:
             return {'error': 1}
 
-        import subprocess
-
         org_dir = os.getcwd()
         os.chdir(tmp_dir)
-        exec_proc = subprocess.Popen("/usr/bin/time -f \"%e\\n%M\" ./" + self.name + " > /dev/null", stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        exec_proc = subprocess.Popen("/usr/bin/time -f '%%e\\n%%M' sh -c './%s>/dev/null 2>&1'" % (self.tmp_name), stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
         os.chdir(org_dir)
 
-        # TODO: read preference
-        time_multiple = 1.5
+        time_multiple = 1.3
         max_time = self.tpoint_timelmt[tpoint] * time_multiple;
         cur_time = 0.0
         return_code = 0
@@ -128,12 +127,13 @@ class Judge:
             cur_time += 0.1
 
         if cur_time > max_time:
-            exec_proc.kill()
+            exec_proc.terminate()
+            subprocess.Popen("killall " + self.tmp_name, shell = True)
             TLE = True
 
-        result = {'error': 0, 'tpoint': tpoint + 1,       \
-                  'timelmt': self.tpoint_timelmt[tpoint], \
-                  'memlmt': self.tpoint_memlmt[tpoint] }
+        result = { 'error': 0, 'tpoint': tpoint + 1,
+                   'timelmt': self.tpoint_timelmt[tpoint],
+                   'memlmt': self.tpoint_memlmt[tpoint] }
 
         # RTE
         if return_code:
@@ -143,9 +143,9 @@ class Judge:
         if TLE:
             exec_time = cur_time
         else:
-            exec_time      = float(exec_proc.stdout.readline())
+            exec_time = float(exec_proc.stdout.readline())
             result['time'] = exec_time
-            exec_mem       = float(exec_proc.stdout.readline()) / 4 / 1000
+            exec_mem = float(exec_proc.stdout.readline()) / 4 / 1000
             result['mem']  = exec_mem
 
         # TLE
