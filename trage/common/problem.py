@@ -3,7 +3,7 @@
 
 import os
 
-prob_root_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
+prob_root_dir = os.path.join(os.getenv("HOME"), ".trage/problem")
 
 def get_problist():
     files = os.listdir(prob_root_dir)
@@ -11,7 +11,7 @@ def get_problist():
     problist = []
     for directory in files:
         if os.path.isdir(os.path.join(prob_root_dir, directory)):
-            prob = Problem('user', directory)
+            prob = Problem(directory)
             prob.load()
             problist.append({
                 'id': prob.get_id(),
@@ -21,14 +21,13 @@ def get_problist():
     return problist
 
 class Problem:
-    def __init__(self, source, id):
-        self.source = source
+    def __init__(self, id):
         self.id = id
 
     def load(self):
         '''读取题目配置文件及数据库'''
         # Get directory path
-        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem", self.source, self.id)
+        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem", self.id)
 
         # Read problem config file
         import ConfigParser

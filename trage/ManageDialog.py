@@ -11,7 +11,7 @@ gettext.textdomain('trage')
 
 from trage import (
     AddDialog)
-from trage.common.problem import Problem
+from trage.common.problem import Problem, get_problist
 from trage.helpers import get_builder
 
 (
@@ -44,16 +44,10 @@ class ManageDialog(gtk.Window):
         self.button_delete.set_sensitive(0)
 
     def update_model(self):
-        # TODO: move duplicated codes to common/problem.py (get_prob_list)
         self.model.clear()
-        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
-        files = os.listdir(prob_dir)
-        files.sort()
-        for directory in files:
-            if os.path.isdir(os.path.join(prob_dir, directory)):
-                prob = Problem('user', directory)
-                prob.load()
-                self.model.append( [directory, prob.get_name(), prob.get_title()] )
+        problist = get_problist()
+        for prob in problist:
+            self.model.append( [prob['id'], prob['name'], prob['title']] )
 
     def init_treeview(self):
         self.treeview = self.builder.get_object('treeview_prob')
@@ -93,7 +87,7 @@ class ManageDialog(gtk.Window):
         """delete - delete a problem"""
         # Delete dir
         self.button_delete.set_sensitive(0)
-        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user", str(self.selected_prob_id))
+        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem", str(self.selected_prob_id))
         shutil.rmtree(prob_dir)
 
         # Delete row

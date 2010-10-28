@@ -11,12 +11,11 @@ import subprocess
 tmp_dir = '/tmp/'
 
 class Judge:
-    def __init__(self, source, id, source_file):
-        self.source      = source
-        self.id          = id
+    def __init__(self, id, source_file):
+        self.id = id
         self.source_file = source_file
-        self.lang        = os.path.splitext(source_file)[1].lstrip('.').lower()
-        self.prob_dir    = os.path.join(os.getenv("HOME"), ".trage/problem", self.source, self.id)
+        self.lang = os.path.splitext(source_file)[1].lstrip('.').lower()
+        self.prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem", self.id)
 
     def load(self):
         '''Load problem config file'''
@@ -28,18 +27,18 @@ class Judge:
             return 1 # Wrong problem id
         try:
             config.read(config_file)
-            self.name           = config.get("main", "name")
-            self.tpoint_count   = config.getint("test_point", "test_point_count")
+            self.name = config.get("main", "name")
+            self.tpoint_count = config.getint("test_point", "test_point_count")
             self.tpoint_timelmt = []
-            self.tpoint_memlmt  = []
+            self.tpoint_memlmt = []
             self.tpoint_correct = 0
             self.tpoint_current = 0
-            timelmt_all         = None
-            memlmt_all          = None
+            timelmt_all = None
+            memlmt_all = None
             if config.has_option("test_point", "time_limit_all"):
-                timelmt_all     = float( config.get("test_point", "time_limit_all") )
+                timelmt_all = float( config.get("test_point", "time_limit_all") )
             if config.has_option("test_point", "mem_limit_all"):
-                memlmt_all      = float( config.get("test_point", "mem_limit_all") )
+                memlmt_all = float( config.get("test_point", "mem_limit_all") )
             for i in range(0, self.tpoint_count):
                 if timelmt_all:
                     self.tpoint_timelmt.append(timelmt_all)

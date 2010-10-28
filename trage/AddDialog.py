@@ -296,7 +296,7 @@ class AddDialog(gtk.Window):
             iter = self.model.iter_next(iter)
 
         # Get a new problem ID
-        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem/user")
+        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem")
         # TODO: TOO UGLY
         for i in range(999999):
             if not os.path.exists(os.path.join(prob_dir, str(i))):
