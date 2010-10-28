@@ -12,6 +12,7 @@ gettext.textdomain('trage')
 from trage import (
     AddDialog)
 from trage.common.problem import Problem, get_problist
+from trage.common.general import *
 from trage.helpers import get_builder
 
 (
@@ -85,12 +86,22 @@ class ManageDialog(gtk.Window):
 
     def delete(self, widget, data = None):
         """delete - delete a problem"""
+        prob_id = str(self.selected_prob_id)
+
         # Delete dir
         self.button_delete.set_sensitive(0)
-        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem", str(self.selected_prob_id))
+        prob_dir = os.path.join(prob_root_dir, prob_id)
         shutil.rmtree(prob_dir)
 
-        # Delete row
+        # Delete db row
+        import sqlite3
+        conn = sqlite3.connect(db_location)
+        c = conn.cursor()
+        c.execute("DELETE FROM problem WHERE id = ?", (prob_id))
+        conn.commit()
+        c.close()
+
+        # Delete ui row
         self.model.remove(self.selected_prob_iter)
 
     def quit(self, widget):

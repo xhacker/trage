@@ -28,3 +28,9 @@ def get_builder(builder_file_name):
     builder.set_translation_domain('trage')
     builder.add_from_file(ui_filename)
     return builder
+
+def get_textview_text(textview):
+    buffer = textview.get_buffer()
+    start_iter = buffer.get_start_iter()
+    end_iter = buffer.get_end_iter()
+    return buffer.get_text(start_iter, end_iter)

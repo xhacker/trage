@@ -2,22 +2,21 @@
 # -*- coding: utf-8 -*-
 
 import os
-
-prob_root_dir = os.path.join(os.getenv("HOME"), ".trage/problem")
+import sqlite3
+from trage.common.general import *
 
 def get_problist():
-    files = os.listdir(prob_root_dir)
-    files.sort()
+    conn = sqlite3.connect(db_location)
+    c = conn.cursor()
+    c.execute("SELECT id, name, title FROM problem")
     problist = []
-    for directory in files:
-        if os.path.isdir(os.path.join(prob_root_dir, directory)):
-            prob = Problem(directory)
-            prob.load()
-            problist.append({
-                'id': prob.get_id(),
-                'name': prob.get_name(),
-                'title': prob.get_title()
-            })
+    for row in c:
+        problist.append({
+            'id': str(row[0]),
+            'name': row[1],
+            'title': row[2]
+        })
+    c.close()
     return problist
 
 class Problem:
@@ -27,21 +26,21 @@ class Problem:
     def load(self):
         '''读取题目配置文件及数据库'''
         # Get directory path
-        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem", self.id)
-
-        # Read problem config file
-        import ConfigParser
-        config = ConfigParser.RawConfigParser()
-        try:
-            config.read(os.path.join(prob_dir, "problem.conf"))
-            self.name = config.get("main", "name")
-            self.title = config.get("main", "title")
-        except:
-            return 1 # Error
+        prob_dir = os.path.join(prob_root_dir, self.id)
 
         # Read database
-        # TODO
-        self.info = None
+        conn = sqlite3.connect(db_location)
+        c = conn.cursor()
+        c.execute("SELECT name, title, info_main, info_hint, info_input, info_output, difficulty FROM problem WHERE id = ?", (self.id))
+        row = c.fetchone()
+        self.name = row[0]
+        self.title = row[1]
+        self.info_main = row[2]
+        self.info_hint = row[3]
+        self.info_input = row[4]
+        self.info_output = row[5]
+        self.difficulty = row[6]
+        c.close()
 
     def get_id(self):
         return self.id
@@ -52,5 +51,17 @@ class Problem:
     def get_title(self):
         return self.title
 
-    def get_info(self):
-        return self.info
+    def get_info_main(self):
+        return self.info_main
+
+    def get_info_hint(self):
+        return self.info_hint
+
+    def get_info_input(self):
+        return self.info_input
+
+    def get_info_output(self):
+        return self.info_output
+
+    def get_difficulty(self):
+        return self.difficulty

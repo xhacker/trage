@@ -11,7 +11,8 @@ import gettext
 from gettext import gettext as _
 gettext.textdomain('trage')
 
-from trage.helpers import get_builder
+from trage.helpers import get_builder, get_textview_text
+from trage.common.general import *
 
 (
     COLUMN_ID,
@@ -256,14 +257,24 @@ class AddDialog(gtk.Window):
         alert_dialog.destroy()
 
     def add(self, widget):
-        # Check
         entry_probtitle = self.builder.get_object('entry_probtitle')
         entry_probname = self.builder.get_object('entry_probname')
+        entry_difficulty = self.builder.get_object('entry_difficulty')
+        textview_main = self.builder.get_object('textview_main')
+        textview_input = self.builder.get_object('textview_input')
+        textview_output = self.builder.get_object('textview_output')
+        textview_hint = self.builder.get_object('textview_hint')
         prob_name = entry_probname.get_text()
         prob_title = entry_probtitle.get_text()
+        difficulty = entry_difficulty.get_text()
+        info_main = get_textview_text(textview_main)
+        info_input = get_textview_text(textview_input)
+        info_output = get_textview_text(textview_output)
+        info_hint = get_textview_text(textview_hint)
         filechooser = self.builder.get_object('filechooser_probbasedir')
         base_dir = filechooser.get_filename()
 
+        # Check
         if not prob_title:
             self.alert(_('Please enter problem title.'))
             return
@@ -295,15 +306,20 @@ class AddDialog(gtk.Window):
 
             iter = self.model.iter_next(iter)
 
-        # Get a new problem ID
-        prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem")
-        # TODO: TOO UGLY
-        for i in range(999999):
-            if not os.path.exists(os.path.join(prob_dir, str(i))):
-                break
-        prob_dir = os.path.join(prob_dir, str(i))
-
-        # Make problem dir
+        # Adding
+        import sqlite3
+        conn = sqlite3.connect(db_location)
+        conn.text_factory = str
+        c = conn.cursor()
+        c.execute('''
+        INSERT INTO problem
+        (name, title, info_main, info_hint, info_input, info_output, difficulty) VALUES
+        (?, ?, ?, ?, ?, ?, ?)''',
+        (prob_name, prob_title, info_main, info_hint, info_input, info_output, difficulty))
+        prob_id = str(c.lastrowid)
+        conn.commit()
+        c.close()
+        prob_dir = os.path.join(prob_root_dir, prob_id)
         os.mkdir(prob_dir)
         
         iter = self.model.get_iter_first()
