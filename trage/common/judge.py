@@ -71,7 +71,7 @@ class Judge:
         elif self.lang == "cpp":
             compile_command = 'g++ -lm -o "%s" "%s"' % (os.path.join(tmp_dir, self.tmp_name), os.path.join(tmp_dir, self.name + "." + self.lang))
         elif self.lang == "pas":
-            compile_command = 'fpc -o "%s" "%s"' % (os.path.join(tmp_dir, self.tmp_name), os.path.join(tmp_dir, self.name + "." + self.lang))
+            compile_command = 'fpc -o"%s" "%s"' % (os.path.join(tmp_dir, self.tmp_name), os.path.join(tmp_dir, self.name + "." + self.lang))
         else:
             return _('Sorry, we don\'t support your programming language currently.')
 
@@ -191,8 +191,10 @@ class Judge:
             if os.path.lexists(os.path.join(tmp_dir, self.name + ".out")):
                 os.remove(os.path.join(tmp_dir, self.name + ".out"))
         if exe:
-            if os.path.lexists(os.path.join(tmp_dir, self.name)):
-                os.remove(os.path.join(tmp_dir, self.name))
+            if os.path.lexists(os.path.join(tmp_dir, self.name + ".o")):
+                os.remove(os.path.join(tmp_dir, self.name + ".o"))
+            if os.path.lexists(os.path.join(tmp_dir, self.tmp_name)):
+                os.remove(os.path.join(tmp_dir, self.tmp_name))
 
     def __del__(self):
         self.clean()
