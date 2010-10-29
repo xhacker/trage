@@ -277,7 +277,7 @@
                         <property name="vscrollbar_policy">automatic</property>
                         <child>
                           <object class="GtkTextView" id="textview_input">
-                            <property name="height_request">240</property>
+                            <property name="height_request">160</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                           </object>
@@ -306,7 +306,7 @@
                         <property name="vscrollbar_policy">automatic</property>
                         <child>
                           <object class="GtkTextView" id="textview_output">
-                            <property name="height_request">240</property>
+                            <property name="height_request">160</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                           </object>
@@ -317,6 +317,64 @@
                       </packing>
                     </child>
                     <child>
+                      <object class="GtkLabel" id="label8">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Example Input</property>
+                      </object>
+                      <packing>
+                        <property name="padding">5</property>
+                        <property name="position">6</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scrolledwindow7">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="vscrollbar_policy">automatic</property>
+                        <child>
+                          <object class="GtkTextView" id="textview_exampleinput">
+                            <property name="height_request">150</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">7</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label9">
+                        <property name="visible">True</property>
+                        <property name="xalign">0</property>
+                        <property name="label" translatable="yes">Example Output</property>
+                      </object>
+                      <packing>
+                        <property name="padding">5</property>
+                        <property name="position">8</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scrolledwindow8">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="hscrollbar_policy">automatic</property>
+                        <property name="vscrollbar_policy">automatic</property>
+                        <child>
+                          <object class="GtkTextView" id="textview_exampleoutput">
+                            <property name="height_request">150</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">9</property>
+                      </packing>
+                    </child>
+                    <child>
                       <object class="GtkLabel" id="label4">
                         <property name="visible">True</property>
                         <property name="xalign">0</property>
@@ -324,7 +382,7 @@
                       </object>
                       <packing>
                         <property name="padding">5</property>
-                        <property name="position">6</property>
+                        <property name="position">10</property>
                       </packing>
                     </child>
                     <child>
@@ -335,14 +393,14 @@
                         <property name="vscrollbar_policy">automatic</property>
                         <child>
                           <object class="GtkTextView" id="textview_hint">
-                            <property name="height_request">200</property>
+                            <property name="height_request">180</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="position">9</property>
+                        <property name="position">11</property>
                       </packing>
                     </child>
                   </object>
@@ -439,8 +497,8 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="use_stock">True</property>
-                <accelerator key="w" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
                 <accelerator key="q" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
+                <accelerator key="w" signal="clicked" modifiers="GDK_CONTROL_MASK"/>
                 <signal name="clicked" handler="quit"/>
               </object>
               <packing>

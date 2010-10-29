@@ -34,3 +34,26 @@ def get_textview_text(textview):
     start_iter = buffer.get_start_iter()
     end_iter = buffer.get_end_iter()
     return buffer.get_text(start_iter, end_iter)
+
+def get_difficulty_text(difficulty):
+    if difficulty is not 0 and not difficulty:
+        difficulty = 2
+    difficulty = int(difficulty)
+    if difficulty < 0:
+        difficulty = 0
+    if difficulty > 5:
+        difficulty = 5
+    text = [
+        '纯水',
+        '略水',
+        '还行',
+        '微难',
+        '暴难',
+        '别碰'
+    ]
+    return text[difficulty]
+
+def nl2br(text):
+    if text is None:
+        return ''
+    return text.replace("\n","<br />\n")

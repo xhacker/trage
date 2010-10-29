@@ -8,13 +8,14 @@ from trage.common.general import *
 def get_problist():
     conn = sqlite3.connect(db_location)
     c = conn.cursor()
-    c.execute("SELECT id, name, title FROM problem")
+    c.execute("SELECT id, name, title, difficulty FROM problem")
     problist = []
     for row in c:
         problist.append({
             'id': str(row[0]),
             'name': row[1],
-            'title': row[2]
+            'title': row[2],
+            'difficulty': row[3]
         })
     c.close()
     return problist
@@ -31,7 +32,7 @@ class Problem:
         # Read database
         conn = sqlite3.connect(db_location)
         c = conn.cursor()
-        c.execute("SELECT name, title, info_main, info_hint, info_input, info_output, difficulty FROM problem WHERE id = ?", (self.id))
+        c.execute("SELECT name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty FROM problem WHERE id = ?", (self.id))
         row = c.fetchone()
         self.name = row[0]
         self.title = row[1]
@@ -39,7 +40,9 @@ class Problem:
         self.info_hint = row[3]
         self.info_input = row[4]
         self.info_output = row[5]
-        self.difficulty = row[6]
+        self.example_input = row[6]
+        self.example_output = row[7]
+        self.difficulty = row[8]
         c.close()
 
     def get_id(self):
@@ -62,6 +65,12 @@ class Problem:
 
     def get_info_output(self):
         return self.info_output
+
+    def get_example_input(self):
+        return self.example_input
+
+    def get_example_output(self):
+        return self.example_output
 
     def get_difficulty(self):
         return self.difficulty

@@ -264,6 +264,8 @@ class AddDialog(gtk.Window):
         textview_input = self.builder.get_object('textview_input')
         textview_output = self.builder.get_object('textview_output')
         textview_hint = self.builder.get_object('textview_hint')
+        textview_exampleinput = self.builder.get_object('textview_exampleinput')
+        textview_exampleoutput = self.builder.get_object('textview_exampleoutput')
         prob_name = entry_probname.get_text()
         prob_title = entry_probtitle.get_text()
         difficulty = entry_difficulty.get_text()
@@ -271,6 +273,8 @@ class AddDialog(gtk.Window):
         info_input = get_textview_text(textview_input)
         info_output = get_textview_text(textview_output)
         info_hint = get_textview_text(textview_hint)
+        example_input = get_textview_text(textview_exampleinput)
+        example_output = get_textview_text(textview_exampleoutput)
         filechooser = self.builder.get_object('filechooser_probbasedir')
         base_dir = filechooser.get_filename()
 
@@ -313,9 +317,9 @@ class AddDialog(gtk.Window):
         c = conn.cursor()
         c.execute('''
         INSERT INTO problem
-        (name, title, info_main, info_hint, info_input, info_output, difficulty) VALUES
-        (?, ?, ?, ?, ?, ?, ?)''',
-        (prob_name, prob_title, info_main, info_hint, info_input, info_output, difficulty))
+        (name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty) VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+        (prob_name, prob_title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty))
         prob_id = str(c.lastrowid)
         conn.commit()
         c.close()

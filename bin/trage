@@ -48,6 +48,8 @@ if not os.path.exists(db_location):
         info_hint TEXT,
         info_input TEXT,
         info_output TEXT,
+        example_input TEXT,
+        example_output TEXT,
         submit_count INTEGER,
         accept_count INTEGER,
         difficulty INTEGER
