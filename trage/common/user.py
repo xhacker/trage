@@ -24,13 +24,19 @@ class User:
         # Read database
         conn = sqlite3.connect(db_location)
         c = conn.cursor()
-        c.execute("SELECT realname FROM user WHERE name = ? AND password = ?", [self.username, self.password])
+        c.execute("SELECT id, realname FROM user WHERE name = ? AND password = ?", [self.username, self.password])
         row = c.fetchone()
         if row is None:
             return 1
-        self.realname = row[0]
+        self.id = row[0]
+        self.realname = row[1]
+        c.execute("UPDATE user SET lastlogin = strftime('%s', 'now') WHERE id = ?", [self.id])
+        conn.commit()
         c.close()
         return 0
+
+    def get_id(self):
+        return self.id
 
     def get_username(self):
         return self.username

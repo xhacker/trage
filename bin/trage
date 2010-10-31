@@ -65,12 +65,11 @@ if not os.path.exists(db_location):
         submit_count INTEGER,
         accept_count INTEGER
     );
-    CREATE TABLE status
+    CREATE TABLE accepted
     (
         id INTEGER PRIMARY KEY,
         user_id INTEGER,
         prob_id INTEGER,
-        status TEXT,
         time INTEGER
     );
     ''')

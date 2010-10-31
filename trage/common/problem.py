@@ -5,6 +5,36 @@ import os
 import sqlite3
 from trage.common.general import *
 
+def update_status(user_id, prob_id, AC):
+    conn = sqlite3.connect(db_location)
+    c = conn.cursor()
+    c.execute('''SELECT id FROM accepted WHERE user_id = ? AND prob_id = ?''', (user_id, prob_id))
+    if c.fetchone():
+        if AC:
+            c.execute('''UPDATE accepted SET time = strftime('%s', 'now') WHERE user_id = ? AND prob_id = ?''', (user_id, prob_id))
+    else:
+        if AC:
+            c.execute('''
+            INSERT INTO accepted
+            (user_id, prob_id, time) VALUES
+            (?, ?, strftime('%s', 'now'))''',
+            (user_id, prob_id))
+            c.execute('''UPDATE problem SET submit_count = submit_count + 1, accept_count = accept_count + 1 WHERE id = ?''', (prob_id))
+        else:
+            c.execute('''UPDATE problem SET submit_count = submit_count + 1 WHERE id = ?''', (prob_id))
+    conn.commit()
+    c.close()
+
+def get_status(user_id, prob_id):
+    conn = sqlite3.connect(db_location)
+    c = conn.cursor()
+    c.execute('''SELECT id FROM accepted WHERE user_id = ? AND prob_id = ?''', (user_id, prob_id))
+    if c.fetchone():
+        c.close()
+        return True
+    c.close()
+    return False
+
 def get_problist():
     conn = sqlite3.connect(db_location)
     c = conn.cursor()
