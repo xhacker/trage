@@ -20,8 +20,10 @@ def update_status(user_id, prob_id, AC):
             (?, ?, strftime('%s', 'now'))''',
             (user_id, prob_id))
             c.execute('''UPDATE problem SET submit_count = submit_count + 1, accept_count = accept_count + 1 WHERE id = ?''', (prob_id))
+            c.execute('''UPDATE user SET submit_count = submit_count + 1, accept_count = accept_count + 1 WHERE id = ?''', [user_id])
         else:
             c.execute('''UPDATE problem SET submit_count = submit_count + 1 WHERE id = ?''', (prob_id))
+            c.execute('''UPDATE user SET submit_count = submit_count + 1 WHERE id = ?''', [user_id])
     conn.commit()
     c.close()
 
