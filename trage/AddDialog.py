@@ -317,8 +317,8 @@ class AddDialog(gtk.Window):
         c = conn.cursor()
         c.execute('''
         INSERT INTO problem
-        (name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty) VALUES
-        (?, ?, ?, ?, ?, ?, ?, ?, ?)''',
+        (name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty, submit_count, accept_count) VALUES
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)''',
         (prob_name, prob_title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty))
         prob_id = str(c.lastrowid)
         conn.commit()
