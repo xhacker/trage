@@ -50,6 +50,21 @@ def get_problist():
     c.close()
     return problist
 
+def get_io(io, prob_id, tp_id):
+    ext = '.in' if io == 'input' else '.ans'
+    filename = os.path.join(prob_root_dir, prob_id, tp_id + ext)
+    return open(filename).read()
+
+def get_std(prob_id):
+    cfile = os.path.join(prob_root_dir, prob_id, 'std.c')
+    cppfile = os.path.join(prob_root_dir, prob_id, 'std.cpp')
+    std = {'c': None, 'cpp': None}
+    if os.path.exists(cfile):
+        std['c'] = open(cfile).read()
+    if os.path.exists(cppfile):
+        std['cpp'] = open(cppfile).read()
+    return std
+
 class Problem:
     def __init__(self, id):
         self.id = id

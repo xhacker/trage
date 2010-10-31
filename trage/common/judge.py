@@ -8,14 +8,15 @@ gettext.textdomain('trage')
 import os
 import time
 import subprocess
-tmp_dir = '/tmp/'
+from trage.common.general import *
+
 
 class Judge:
     def __init__(self, id, source_file):
         self.id = id
         self.source_file = source_file
         self.lang = os.path.splitext(source_file)[1].lstrip('.').lower()
-        self.prob_dir = os.path.join(os.getenv("HOME"), ".trage/problem", self.id)
+        self.prob_dir = os.path.join(prob_root_dir, self.id)
 
     def load(self):
         '''Load problem config file'''
