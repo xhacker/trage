@@ -18,7 +18,7 @@ def update_status(user_id, prob_id, AC):
             INSERT INTO accepted
             (user_id, prob_id, time) VALUES
             (?, ?, strftime('%s', 'now'))''',
-            (user_id, prob_id))
+            [user_id, prob_id])
             c.execute('''UPDATE problem SET submit_count = submit_count + 1, accept_count = accept_count + 1 WHERE id = ?''', [prob_id])
             c.execute('''UPDATE user SET submit_count = submit_count + 1, accept_count = accept_count + 1 WHERE id = ?''', [user_id])
         else:
@@ -26,6 +26,24 @@ def update_status(user_id, prob_id, AC):
             c.execute('''UPDATE user SET submit_count = submit_count + 1 WHERE id = ?''', [user_id])
     conn.commit()
     c.close()
+
+def store_code(user_id, prob_id, filename):
+    from time import strftime
+    from shutil import copy
+    newname = str(strftime("%s")) + os.path.basename(filename)
+    copy(filename, os.path.join(code_dir, newname))
+    conn = sqlite3.connect(db_location)
+    c = conn.cursor()
+    c.execute('''
+    INSERT INTO code
+    (user_id, prob_id, time, filename) VALUES
+    (?, ?, strftime('%s', 'now'), ?)''',
+    [user_id, prob_id, newname])
+    conn.commit()
+    c.close()
+
+def clean_code(filename):
+    os.remove(os.path.join(tmp_dir, filename))
 
 def get_status(user_id, prob_id):
     conn = sqlite3.connect(db_location)
@@ -67,9 +85,13 @@ def get_std(prob_id):
         std['cpp'] = open(cppfile).read()
     return std
 
+def get_usercode(filename):
+    file = os.path.join(code_dir, filename)
+    return open(file).read()
+
 class Problem:
     def __init__(self, id):
-        self.id = id
+        self.id = str(id)
 
     def load(self):
         '''读取题目配置文件及数据库'''

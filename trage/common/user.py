@@ -19,6 +19,20 @@ def add_user(username, realname, password):
     conn.commit()
     c.close()
 
+def get_code_list(user_id):
+    conn = sqlite3.connect(db_location)
+    c = conn.cursor()
+    c.execute("SELECT prob_id, time, filename FROM code WHERE user_id = ?", [user_id])
+    code_list = []
+    for row in c:
+        code_list.append({
+            'prob_id': row[0],
+            'time': row[1],
+            'filename': row[2]
+        })
+    c.close()
+    return code_list
+
 class User:
     def __init__(self, username, password):
         self.username = username
