@@ -8,10 +8,10 @@ from trage.common.general import *
 def update_status(user_id, prob_id, AC):
     conn = sqlite3.connect(db_location)
     c = conn.cursor()
-    c.execute('''SELECT id FROM accepted WHERE user_id = ? AND prob_id = ?''', (user_id, prob_id))
+    c.execute('''SELECT id FROM accepted WHERE user_id = ? AND prob_id = ?''', [user_id, prob_id])
     if c.fetchone():
         if AC:
-            c.execute('''UPDATE accepted SET time = strftime('%s', 'now') WHERE user_id = ? AND prob_id = ?''', (user_id, prob_id))
+            c.execute('''UPDATE accepted SET time = strftime('%s', 'now') WHERE user_id = ? AND prob_id = ?''', [user_id, prob_id])
     else:
         if AC:
             c.execute('''
@@ -19,10 +19,10 @@ def update_status(user_id, prob_id, AC):
             (user_id, prob_id, time) VALUES
             (?, ?, strftime('%s', 'now'))''',
             (user_id, prob_id))
-            c.execute('''UPDATE problem SET submit_count = submit_count + 1, accept_count = accept_count + 1 WHERE id = ?''', (prob_id))
+            c.execute('''UPDATE problem SET submit_count = submit_count + 1, accept_count = accept_count + 1 WHERE id = ?''', [prob_id])
             c.execute('''UPDATE user SET submit_count = submit_count + 1, accept_count = accept_count + 1 WHERE id = ?''', [user_id])
         else:
-            c.execute('''UPDATE problem SET submit_count = submit_count + 1 WHERE id = ?''', (prob_id))
+            c.execute('''UPDATE problem SET submit_count = submit_count + 1 WHERE id = ?''', [prob_id])
             c.execute('''UPDATE user SET submit_count = submit_count + 1 WHERE id = ?''', [user_id])
     conn.commit()
     c.close()
@@ -30,7 +30,7 @@ def update_status(user_id, prob_id, AC):
 def get_status(user_id, prob_id):
     conn = sqlite3.connect(db_location)
     c = conn.cursor()
-    c.execute('''SELECT id FROM accepted WHERE user_id = ? AND prob_id = ?''', (user_id, prob_id))
+    c.execute('''SELECT id FROM accepted WHERE user_id = ? AND prob_id = ?''', [user_id, prob_id])
     if c.fetchone():
         c.close()
         return True
@@ -79,7 +79,7 @@ class Problem:
         # Read database
         conn = sqlite3.connect(db_location)
         c = conn.cursor()
-        c.execute("SELECT name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty FROM problem WHERE id = ?", (self.id))
+        c.execute("SELECT name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty FROM problem WHERE id = ?", [self.id])
         row = c.fetchone()
         self.name = row[0]
         self.title = row[1]
@@ -90,6 +90,16 @@ class Problem:
         self.example_input = row[6]
         self.example_output = row[7]
         self.difficulty = row[8]
+        c.close()
+
+    def set_all(self, args):
+        conn = sqlite3.connect(db_location)
+        conn.text_factory = str
+        c = conn.cursor()
+        c.execute('''UPDATE problem SET
+        name = ?, title = ?, info_main = ?, info_hint = ?, info_input = ?, info_output = ?, example_input = ?, example_output = ?, difficulty = ? WHERE id = ?''',
+        [args['name'], args['title'], args['info_main'], args['info_hint'], args['info_input'], args['info_output'], args['example_input'], args['example_output'], args['difficulty'], args['id']])
+        conn.commit()
         c.close()
 
     def get_id(self):

@@ -10,6 +10,9 @@ import time
 import subprocess
 from trage.common.general import *
 
+def unlock():
+    if os.path.lexists(os.path.join(trage_dir, "JudgeLock")):
+        os.remove(os.path.join(trage_dir, "JudgeLock"))
 
 class Judge:
     def __init__(self, id, source_file):
@@ -17,6 +20,10 @@ class Judge:
         self.source_file = source_file
         self.lang = os.path.splitext(source_file)[1].lstrip('.').lower()
         self.prob_dir = os.path.join(prob_root_dir, self.id)
+        while os.path.lexists(os.path.join(trage_dir, "JudgeLock")):
+            print 'Another judger is running...wait...'
+            time.sleep(2)
+        open(os.path.join(trage_dir, "JudgeLock"), 'w')
 
     def load(self):
         '''Load problem config file'''
@@ -90,7 +97,7 @@ class Judge:
     def judge(self):
         '''Judge a test point'''
         if self.tpoint_current >= self.tpoint_count:
-            self.clean()
+            self.clean(lock = True)
             return None
 
         tpoint = self.tpoint_current
@@ -185,7 +192,7 @@ class Judge:
                  'AC': AC }
 
 
-    def clean(self, io = True, exe = True):
+    def clean(self, io = True, exe = True, lock = False):
         if io:
             if os.path.lexists(os.path.join(tmp_dir, self.name + ".in")):
                 os.remove(os.path.join(tmp_dir, self.name + ".in"))
@@ -196,6 +203,9 @@ class Judge:
                 os.remove(os.path.join(tmp_dir, self.name + ".o"))
             if os.path.lexists(os.path.join(tmp_dir, self.tmp_name)):
                 os.remove(os.path.join(tmp_dir, self.tmp_name))
+        if lock:
+            if os.path.lexists(os.path.join(trage_dir, "JudgeLock")):
+                os.remove(os.path.join(trage_dir, "JudgeLock"))
 
     def __del__(self):
-        self.clean()
+        self.clean(lock = True)

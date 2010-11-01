@@ -97,7 +97,7 @@ class ManageDialog(gtk.Window):
         import sqlite3
         conn = sqlite3.connect(db_location)
         c = conn.cursor()
-        c.execute("DELETE FROM problem WHERE id = ?", (prob_id))
+        c.execute("DELETE FROM problem WHERE id = ?", [prob_id])
         conn.commit()
         c.close()
 
