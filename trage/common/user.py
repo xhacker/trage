@@ -22,7 +22,7 @@ def add_user(username, realname, password):
 def get_code_list(user_id):
     conn = sqlite3.connect(db_location)
     c = conn.cursor()
-    c.execute("SELECT prob_id, time, filename FROM code WHERE user_id = ?", [user_id])
+    c.execute("SELECT prob_id, time, filename FROM code WHERE user_id = ? ORDER BY id DESC", [user_id])
     code_list = []
     for row in c:
         code_list.append({
@@ -59,6 +59,7 @@ class User:
 
     def set_password(self, password):
         conn = sqlite3.connect(db_location)
+        conn.text_factory = str
         c = conn.cursor()
         c.execute("UPDATE user SET password = ? WHERE id = ?", [password, self.id])
         conn.commit()

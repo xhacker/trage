@@ -33,6 +33,7 @@ def store_code(user_id, prob_id, filename):
     newname = str(strftime("%s")) + os.path.basename(filename)
     copy(filename, os.path.join(code_dir, newname))
     conn = sqlite3.connect(db_location)
+    conn.text_factory = str
     c = conn.cursor()
     c.execute('''
     INSERT INTO code
@@ -87,6 +88,10 @@ def get_std(prob_id):
 
 def get_usercode(filename):
     file = os.path.join(code_dir, filename)
+    return open(file).read()
+
+def get_img(prob_id, img_id):
+    file = os.path.join(prob_root_dir, prob_id, img_id + ".png")
     return open(file).read()
 
 class Problem:

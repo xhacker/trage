@@ -57,3 +57,10 @@ def nl2br(text):
     if text is None:
         return ''
     return text.replace("\n","<br />\n")
+
+def format(text, prob_id):
+    for i in range(100):
+        img_holder = "{{{IMG%d}}}" % i
+        if img_holder in text:
+            text = text.replace(img_holder, '<img src="/problem/%s/img/%d" />' % (prob_id, i))
+    return nl2br(text)

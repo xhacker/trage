@@ -7,6 +7,7 @@ gettext.textdomain('trage')
 
 import os
 import time
+import shutil
 import subprocess
 from trage.common.general import *
 
@@ -108,11 +109,11 @@ class Judge:
         out_file = os.path.join(tmp_dir, self.name + ".out")
         ans_file = os.path.join(self.prob_dir, str(tpoint) + ".ans")
 
-        if os.path.lexists(in_file) == False \
-                or os.path.lexists(ans_file) == False:
+        if (os.path.lexists(in_file) == False
+            or os.path.lexists(ans_file) == False):
             return {'error': 1}
         try:
-            os.symlink(in_file, os.path.join(tmp_dir, self.name + ".in"))
+            shutil.copyfile(in_file, os.path.join(tmp_dir, self.name + ".in"))
         except:
             return {'error': 1}
 
