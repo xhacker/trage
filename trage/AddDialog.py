@@ -259,7 +259,7 @@ class AddDialog(gtk.Window):
     def add(self, widget):
         entry_probtitle = self.builder.get_object('entry_probtitle')
         entry_probname = self.builder.get_object('entry_probname')
-        entry_difficulty = self.builder.get_object('entry_difficulty')
+        entry_id = self.builder.get_object('entry_id')
         textview_main = self.builder.get_object('textview_main')
         textview_input = self.builder.get_object('textview_input')
         textview_output = self.builder.get_object('textview_output')
@@ -268,7 +268,7 @@ class AddDialog(gtk.Window):
         textview_exampleoutput = self.builder.get_object('textview_exampleoutput')
         prob_name = entry_probname.get_text()
         prob_title = entry_probtitle.get_text()
-        difficulty = entry_difficulty.get_text()
+        id = entry_id.get_text()
         info_main = get_textview_text(textview_main)
         info_input = get_textview_text(textview_input)
         info_output = get_textview_text(textview_output)
@@ -315,11 +315,18 @@ class AddDialog(gtk.Window):
         conn = sqlite3.connect(db_location)
         conn.text_factory = str
         c = conn.cursor()
-        c.execute('''
-        INSERT INTO problem
-        (name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty, submit_count, accept_count) VALUES
-        (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)''',
-        (prob_name, prob_title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty))
+        if id:
+            c.execute('''
+            INSERT INTO problem
+            (id, name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty, submit_count, accept_count) VALUES
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, 2, 0, 0)''',
+            (id, prob_name, prob_title, info_main, info_hint, info_input, info_output, example_input, example_output))
+        else:
+            c.execute('''
+            INSERT INTO problem
+            (name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty, submit_count, accept_count) VALUES
+            (?, ?, ?, ?, ?, ?, ?, ?, 2, 0, 0)''',
+            (prob_name, prob_title, info_main, info_hint, info_input, info_output, example_input, example_output))
         prob_id = str(c.lastrowid)
         conn.commit()
         c.close()

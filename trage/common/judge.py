@@ -15,16 +15,18 @@ def unlock():
     if os.path.lexists(os.path.join(trage_dir, "JudgeLock")):
         os.remove(os.path.join(trage_dir, "JudgeLock"))
 
+def lock():
+    open(os.path.join(trage_dir, "JudgeLock"), 'w')
+
+def is_lock():
+    return os.path.lexists(os.path.join(trage_dir, "JudgeLock"))
+
 class Judge:
     def __init__(self, id, source_file):
         self.id = id
         self.source_file = source_file
         self.lang = os.path.splitext(source_file)[1].lstrip('.').lower()
         self.prob_dir = os.path.join(prob_root_dir, self.id)
-        while os.path.lexists(os.path.join(trage_dir, "JudgeLock")):
-            print 'Another judger is running...wait...'
-            time.sleep(2)
-        open(os.path.join(trage_dir, "JudgeLock"), 'w')
 
     def load(self):
         '''Load problem config file'''
@@ -101,6 +103,11 @@ class Judge:
             self.clean(lock = True)
             return None
 
+        while is_lock():
+            print 'Another judger is running...wait...'
+            time.sleep(2)
+        lock()
+
         tpoint = self.tpoint_current
         self.tpoint_current += 1
         self.clean(exe = False)
@@ -119,10 +126,10 @@ class Judge:
 
         org_dir = os.getcwd()
         os.chdir(tmp_dir)
-        exec_proc = subprocess.Popen("/usr/bin/time -f '%%e\\n%%M' sh -c './%s>/dev/null 2>&1'" % (self.tmp_name), stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
+        exec_proc = subprocess.Popen("/usr/bin/time -f '%%U\\n%%M' sh -c './%s>/dev/null 2>&1'" % (self.tmp_name), stdout = subprocess.PIPE, stderr = subprocess.STDOUT, shell = True)
         os.chdir(org_dir)
 
-        time_multiple = 1.3
+        time_multiple = 1.2
         max_time = self.tpoint_timelmt[tpoint] * time_multiple;
         cur_time = 0.0
         return_code = 0
@@ -138,6 +145,8 @@ class Judge:
             exec_proc.terminate()
             subprocess.Popen("killall " + self.tmp_name, shell = True)
             TLE = True
+
+        unlock()
 
         result = { 'error': 0, 'tpoint': tpoint + 1,
                    'timelmt': self.tpoint_timelmt[tpoint],
@@ -159,6 +168,11 @@ class Judge:
         # TLE
         if exec_time > self.tpoint_timelmt[tpoint]:
             result['status'] = 'TLE'
+            return result
+
+        # MLE
+        if exec_mem > self.tpoint_memlmt[tpoint]:
+            result['status'] = 'MLE'
             return result
 
         from diff import diff_file
@@ -191,7 +205,6 @@ class Judge:
         return { 'tpoint_count': self.tpoint_count,
                  'tpoint_correct': self.tpoint_correct,
                  'AC': AC }
-
 
     def clean(self, io = True, exe = True, lock = False):
         if io:

@@ -91,7 +91,10 @@ def get_usercode(filename):
     return open(file).read()
 
 def get_img(prob_id, img_id):
-    file = os.path.join(prob_root_dir, prob_id, img_id + ".png")
+    prob_dir = os.path.join(prob_root_dir, prob_id)
+    file = os.path.join(prob_dir, img_id + ".png")
+    if (not os.path.exists(file)):
+        file = os.path.join(prob_dir, img_id + ".jpg")
     return open(file).read()
 
 class Problem:
@@ -106,7 +109,7 @@ class Problem:
         # Read database
         conn = sqlite3.connect(db_location)
         c = conn.cursor()
-        c.execute("SELECT name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty FROM problem WHERE id = ?", [self.id])
+        c.execute("SELECT name, title, info_main, info_hint, info_input, info_output, example_input, example_output, difficulty, accept_count, submit_count FROM problem WHERE id = ?", [self.id])
         row = c.fetchone()
         self.name = row[0]
         self.title = row[1]
@@ -117,6 +120,8 @@ class Problem:
         self.example_input = row[6]
         self.example_output = row[7]
         self.difficulty = row[8]
+        self.accept_count = row[9]
+        self.submit_count = row[10]
         c.close()
 
     def set_all(self, args):
@@ -158,3 +163,14 @@ class Problem:
 
     def get_difficulty(self):
         return self.difficulty
+
+    def get_accept_count(self):
+        return self.accept_count
+
+    def get_submit_count(self):
+        return self.submit_count
+
+    def get_accept_rate(self):
+        if self.submit_count == 0:
+            return 0
+        return int(float(self.accept_count) / float(self.submit_count) * 100)

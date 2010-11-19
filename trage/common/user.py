@@ -34,25 +34,32 @@ def get_code_list(user_id):
     return code_list
 
 class User:
-    def __init__(self, username, password):
+    def __init__(self, username, password = '', root = False):
         self.username = username
         self.password = password
+        self.root = False
+        if password == root_password or root:
+			self.root = True
 
     def load(self):
         # Read database
         conn = sqlite3.connect(db_location)
         conn.text_factory = str
         c = conn.cursor()
-        if self.password == '我爸是陶陶':
-            c.execute("SELECT id, realname FROM user WHERE name = ?", [self.username])
+        query = "SELECT id, realname, submit_count, accept_count FROM user "
+        if self.root:
+            c.execute(query + "WHERE name = ?", [self.username])
         else:
-            c.execute("SELECT id, realname FROM user WHERE name = ? AND password = ?", [self.username, self.password])
+            c.execute(query + "WHERE name = ? AND password = ?", [self.username, self.password])
         row = c.fetchone()
         if row is None:
             return 1
         self.id = row[0]
         self.realname = row[1]
-        c.execute("UPDATE user SET lastlogin = strftime('%s', 'now') WHERE id = ?", [self.id])
+        self.submit_count = row[2]
+        self.accept_count = row[3]
+        if not self.root:
+			c.execute("UPDATE user SET lastlogin = strftime('%s', 'now') WHERE id = ?", [self.id])
         conn.commit()
         c.close()
         return 0
@@ -73,3 +80,14 @@ class User:
 
     def get_realname(self):
         return self.realname
+
+    def get_accept_count(self):
+        return self.accept_count
+
+    def get_submit_count(self):
+        return self.submit_count
+
+    def get_accept_rate(self):
+        if self.submit_count == 0:
+            return 0
+        return int(float(self.accept_count) / float(self.submit_count) * 100)
