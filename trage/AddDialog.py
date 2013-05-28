@@ -137,7 +137,7 @@ class AddDialog(gtk.Window):
         self.model = model
         self.treeview = treeview
 
-        self.update_model_file()
+        # self.update_model_file()
 
     def tp_more(self, widget):
         '''增加一个测试点'''
